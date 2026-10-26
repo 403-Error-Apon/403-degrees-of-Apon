@@ -214,10 +214,23 @@
   // Right-click the poster question mark for a tiny context menu.
   const secretObject = $("#secretObject");
   const customContextMenu = $("#customContextMenu");
+  let questionAnimationTimer = null;
+  function animateQuestionMark() {
+    secretObject.classList.remove("is-activating");
+    // Restart the CSS keyframe so quick repeat clicks still get the full pop.
+    void secretObject.offsetWidth;
+    secretObject.classList.add("is-activating");
+    window.clearTimeout(questionAnimationTimer);
+    questionAnimationTimer = window.setTimeout(() => secretObject.classList.remove("is-activating"), 720);
+  }
   function hideContextMenu() { customContextMenu.hidden = true; }
-  secretObject.addEventListener("click", () => showToast("For a tiny secret menu, try right-clicking the question mark."));
+  secretObject.addEventListener("click", () => {
+    animateQuestionMark();
+    showToast("For a tiny secret menu, try right-clicking the question mark.");
+  });
   secretObject.addEventListener("contextmenu", event => {
     event.preventDefault();
+    animateQuestionMark();
     customContextMenu.hidden = false;
     const rect = customContextMenu.getBoundingClientRect();
     const margin = 10;
@@ -331,6 +344,15 @@
   });
   $("#restoreTheme").addEventListener("click", restoreTheme);
   document.addEventListener("keydown", event => { if (event.key === "Escape" && themeActive) restoreTheme(); });
+
+  // Lift the floating watcher while the footer is on screen so the secret 403 stays clear.
+  const siteFooter = document.querySelector(".site-footer");
+  if (siteFooter && "IntersectionObserver" in window) {
+    const footerObserver = new IntersectionObserver(entries => {
+      document.body.classList.toggle("footer-in-view", entries.some(entry => entry.isIntersecting));
+    }, { threshold: 0.08 });
+    footerObserver.observe(siteFooter);
+  }
 
   // Type APON anywhere outside a form to trigger a tiny brand celebration.
   document.addEventListener("keydown", event => {
