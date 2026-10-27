@@ -1,212 +1,390 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f4f1e9">
-  <meta name="description" content="403 degrees of Apon — a little corner of the internet with too many highlights, suspicious smileys, and questionable side quests.">
-  <meta property="og:title" content="403 degrees of Apon">
-  <meta property="og:description" content="A tiny internet corner. Please touch the questionable things.">
-  <meta property="og:type" content="website">
-  <title>403 degrees of Apon ☻</title>
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="#f4f1e9" name="theme-color"/>
+<meta content="403 degrees of Apon — a little corner of the internet with too many highlights, suspicious smileys, and questionable side quests." name="description"/>
+<meta content="403 degrees of Apon" property="og:title"/>
+<meta content="A tiny internet corner. Please touch the questionable things." property="og:description"/>
+<meta content="website" property="og:type"/>
+<title>403 degrees of Apon ☻</title>
+<link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&amp;family=Space+Grotesk:wght@400;500;600;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="styles.css" rel="stylesheet"/>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <div class="paper-grain" aria-hidden="true"></div>
+<a class="skip-link" href="#main">Skip to content</a>
+<div aria-hidden="true" class="paper-grain"></div>
+<div aria-hidden="true" class="scroll-progress" id="scrollProgress"></div>
+<div class="site-shell" id="top">
+<header class="site-header">
+<a aria-label="403 degrees of Apon, back to top" class="brand" href="#top">
+<span aria-hidden="true" class="brand-badge">403</span>
+<span class="brand-name">degrees of <b>Apon</b><i>.</i></span>
+</a>
+<div class="header-note"><span class="live-dot"></span> A PERSONAL WEBSITE, NOT A PERSONALITY TEST</div>
+<button aria-controls="siteNav" aria-expanded="false" aria-label="Toggle navigation" class="menu-button" id="menuButton" type="button"><span></span><span></span></button>
+<nav aria-label="Main navigation" class="site-nav" id="siteNav">
+<a href="#shelf">the shelf</a>
+<a href="#interests">my little obsessions</a>
+<a href="#message">leave a note</a>
+<button aria-pressed="false" class="marker-toggle" id="markerToggle" title="Turn highlight mode on or off" type="button"><span aria-hidden="true">✎</span> marker mode <i id="markerState">off</i></button>
+</nav>
+</header>
+<main id="main">
+<section aria-labelledby="hero-title" class="hero">
+<div class="hero-copy">
+<div class="eyebrow"><span class="eyebrow-square"></span> INTERNET CORNER NO. 403 <span class="eyebrow-dash">—</span> HANDLE WITH CURIOSITY</div>
+<h1 id="hero-title"><span class="title-line">403</span><span class="title-line title-second"><span class="marker marker-yellow" data-highlight="">degrees</span> of</span><span class="title-line title-last"><span class="marker marker-pink" data-highlight="">Apon</span><span class="title-period">.</span></span></h1>
+<p class="hero-intro">A little corner of the internet for strange thoughts, curious people, and decisions that seemed better at the time. <span aria-hidden="true" class="micro-doodle">↘</span></p>
+<div class="hero-actions">
+<a class="pill-button pill-dark" href="#oddities">Wander around <span aria-hidden="true">↗</span></a>
+<button class="pill-button pill-outline" id="aboutButton" type="button">Who made this? <span aria-hidden="true">☺</span></button>
+</div>
+<div class="hero-footline"><span class="footline-symbol">✳</span> FIRST-YEAR DU CRIMINOLOGY STUDENT <span class="footline-divider">/</span> PART-TIME MENACE</div>
+</div>
+<div aria-label="An illustrated 403 degree warning sign surrounded by found objects" class="hero-art">
+<div aria-label="Find me elsewhere" class="hero-floaties">
+<a aria-label="Open my Spotify playlist" class="social-float spotify-float" href="https://open.spotify.com/playlist/6tFOCvL6DThpPn9BTPYJXC?si=nD88JczOSnC_kvL7LWO2hw" rel="noopener noreferrer" target="_blank"><span aria-hidden="true">♫</span><b>MY NOISE</b><small>spotify ↗</small></a>
+<a aria-label="Visit my Facebook page" class="social-float facebook-float" href="https://www.facebook.com/apon.khan.403" rel="noopener noreferrer" target="_blank"><span aria-hidden="true">f</span><b>FIND ME</b><small>facebook ↗</small></a>
+<a aria-label="Email Apon" class="social-float email-float" href="mailto:403_error_4_u@proton.me?subject=A%20note%20from%20403%20degrees"><span aria-hidden="true">✉</span><b>DROP A NOTE</b><small>email ↗</small></a>
+</div>
+<div class="art-topline"><span>APON'S CONTROL PANEL</span><span>FIG. 403.01 <span class="tiny-status">●</span></span></div>
+<div class="poster-stage" id="posterStage">
+<div aria-hidden="true" class="poster-grid"></div>
+<span aria-hidden="true" class="floating-sticker sticker-round">NOT<br/>LOST<br/>JUST<br/>WANDERING</span>
+<button aria-label="Click the floating star" class="tiny-object object-star" data-toy="star" type="button">✳</button>
+<button aria-label="Question mark: inspect it" class="tiny-object object-question" id="secretObject" type="button">?</button>
+<span aria-hidden="true" class="tiny-object object-sparkle">✦</span>
+<span aria-hidden="true" class="poster-number">403</span>
+<div class="poster-caption"><span class="caption-face">☺</span><div><b>STATUS: MOSTLY FINE</b><small>Confidence level: suspicious</small></div></div>
+<span aria-hidden="true" class="tape tape-one"></span>
+<span aria-hidden="true" class="tape tape-two"></span>
+<span aria-hidden="true" class="scribble-arrow">↙</span>
+</div>
+<div class="art-bottomline"><span>THINGS ARE SCATTERED ON PURPOSE</span><span>↘ SCROLL A LITTLE</span></div>
+<span aria-hidden="true" class="margin-note margin-note-right">you found me<br/>congrats i guess</span>
+</div>
+<span aria-hidden="true" class="loose-label loose-label-two">made with 3% planning ↗</span>
+</section>
+<div aria-label="Site motto" class="ticker"><div aria-hidden="true" class="ticker-track"><span>CURIOUS PEOPLE ONLY</span><b>✳</b><span>NO REFUNDS ON WEIRDNESS</span><b>☺</b><span>THIS WAY IS THE WRONG WAY</span><b>✳</b><span>CURIOUS PEOPLE ONLY</span><b>✳</b><span>NO REFUNDS ON WEIRDNESS</span><b>☺</b><span>THIS WAY IS THE WRONG WAY</span><b>✳</b></div></div>
+<section class="intro-section section-grid" id="little-world">
+<div class="section-kicker"><span>01 / THE LITTLE WORLD</span><span class="kicker-line"></span></div>
+<div class="intro-content">
+<p class="overline">OH, YOU ACTUALLY CAME IN.</p>
+<h2>You could be doing something <span class="marker marker-lime" data-highlight="">useful.</span></h2>
+<div class="intro-bottom">
+<p>But you're here now,, take a look around, poke a few things, and find out why I should probably not be trusted with a website!!</p>
+<p class="small-note">403 degree is more than "এক প্যাচ" ✌️</p>
+</div>
+<p class="hidden-whisper" tabindex="0">I see, you're either very observant or have absolutely nothing to do.</p>
+</div>
+<div class="intro-doodle">
+<div aria-hidden="true" class="doodle-stamp"><span>APPROVED BY</span><b>NO ONE</b><span>NO. 403 / MAYBE</span></div>
+<span aria-hidden="true" class="doodle-star">✳</span>
+<span class="doodle-caption">A perfectly<br/>unnecessary doodle.</span>
+<span aria-hidden="true" class="doodle-face">:P</span>
+</div>
+</section>
+<section aria-label="A few facts about this website" class="manifesto">
+<div class="manifesto-label">A VERY SHORT DISCLAIMER</div>
+<p>This website contains <span class="marker marker-yellow" data-highlight="">unnecessary objects</span>, <span class="marker marker-pink" data-highlight="">questionable confidence</span>, and an unreasonable amount of affection for a good <span class="marker marker-blue" data-highlight="">click.</span> Nothing here is that serious,,<br/><span class="manifesto-aside">(Except the margins. I measured those)</span></p>
+<span aria-hidden="true" class="manifesto-hand">(mostly)</span>
+<svg aria-hidden="true" class="chess-doodle chess-doodle-knight" viewBox="0 0 72 84" focusable="false">
+  <path d="M17 68h43l-4-6-7-4-1-9 8-9-3-9-11-5-4-10-9 2-2 8-9 5 3 8-6 7 3 8-5 8 4 6z"/>
+  <path d="M24 57l27 1M21 65h39M26 47l22 1M28 36l13 3M36 29l-1-7M41 24l7-3M32 33l-4 7"/>
+  <path d="M42 17l8-5 4 6-5 6M17 74q20 4 43 0"/>
+  <circle cx="43" cy="30" r="1.4" fill="currentColor" stroke="none"/>
+</svg>
+</section>
+<section class="oddities-section" id="oddities">
+<div class="section-heading">
+<div><p class="overline">02 / THE THINGS I LEFT LYING AROUND</p><h2>Little <span class="marker marker-pink" data-highlight="">oddities.</span></h2></div>
+<p class="heading-side-note">No big purpose.<br/>Just a little bit of mischief. <span aria-hidden="true">↘</span></p>
+<span aria-hidden="true" class="section-stamp">HANDLE<br/>GENTLY</span>
+</div>
+<div class="oddity-grid">
+<article class="oddity-card card-lime">
+<div class="card-index"><span>OBJECT 001</span><span>✳</span></div>
+<button aria-label="Inspect the suspicious eye" class="card-art card-eye" id="watchButton" type="button"><span class="eye-shape"><i></i></span><span class="eye-caption">I SAW THAT.</span><span class="art-scribble">look away ↗</span></button>
+<h3>Something's <span class="marker marker-yellow" data-highlight="">watching.</span></h3>
+<p>It's decorative. Probably. It has absolutely no useful information about you.</p>
+<button class="text-link" data-modal="eye" type="button">Inspect the thing <span>↗</span></button>
+</article>
+<article class="oddity-card card-purple">
+<div class="card-index"><span>OBJECT 002</span><span>↗</span></div>
+<button aria-label="Click the button that says do not click" class="card-art card-window" id="dontClickButton" type="button"><span class="fake-window"><span class="window-bar"><i></i><i></i><i></i><b>certainly-not-a-trap.exe</b></span><span class="window-body"><b>404?</b><em>nah.</em><small>the button works, though.</small></span></span><span class="window-note">do not click <i>←</i></span></button>
+<h3>A button I said <span class="marker marker-blue" data-highlight="">not to.</span></h3>
+<p>You read the warning. You clicked anyway. We understand each other now.</p>
+<button class="text-link" data-modal="button" type="button">I regret nothing <span>↗</span></button>
+</article>
+<article class="oddity-card card-pink">
+<div class="card-index"><span>OBJECT 003</span><span>☺</span></div>
+<button aria-label="Talk to the smiley face" class="card-art card-smiley" id="smileyButton" type="button"><span class="big-smiley">:)</span><span class="smiley-label">IT KNOWS.</span><span class="smiley-spark">✦</span></button>
+<h3>I'm acting completely <span class="marker marker-pink" data-highlight="">normal.</span></h3>
+<p>Nothing suspicious here,, please stop asking follow-up questions!!</p>
+<button class="text-link" id="normalButton" type="button">Act normal <span>↗</span></button>
+</article>
+<article class="oddity-card card-blue">
+<div class="card-index"><span>OBJECT 004</span><span>⌁</span></div>
+<button aria-label="Unravel the strange doodle" class="card-art card-scribble" id="scribbleButton" type="button"><span class="scribble-orbit orbit-a"></span><span class="scribble-orbit orbit-b"></span><span class="scribble-orbit orbit-c"></span><b>?</b><small>EXPLAIN THIS</small></button>
+<h3>A perfectly good <span class="marker marker-yellow" data-highlight="">mystery.</span></h3>
+<p>I could explain it,, but then we'd both lose a perfectly good mystery.</p>
+<button class="text-link" data-modal="mystery" type="button">Investigate further <span>↗</span></button>
+</article>
+</div>
+</section>
+<section aria-label="An endlessly looping shelf of movies, series, books, manga and anime" class="shelf-section" id="shelf">
+<div class="section-heading">
+<div><p class="overline">03 / THE SHELF</p><h2>Things I've watched, read, or <span class="marker marker-blue" data-highlight="">claimed</span> I would.</h2></div>
+<p class="heading-side-note">A never-ending parade of placeholders.
+<br/>Scroll or drag. Your call. <span aria-hidden="true">↔</span></p>
+<span aria-hidden="true" class="section-stamp">SPOILERS<br/>INSIDE</span>
+</div>
+<div class="shelf-rows">
+<div class="shelf-row" data-dir="-1" data-speed="0.42">
+<div class="shelf-label"><span>MOVIES &amp; SERIES</span><span class="shelf-hint">↔ drag me, gently</span></div>
+<div class="shelf-track" role="list">
+<button class="shelf-tile" data-icon="🎬" data-review="I've seen the ending eleven times. I still gasp at the part everyone saw coming." data-tag="comfort rewatch" data-title="The Rewatch One" type="button">
+<span aria-hidden="true" class="tile-art art-pink">🎬</span>
+<span class="tile-title">The Rewatch One</span>
+<span class="tile-tag">comfort rewatch</span>
+</button>
+<button class="shelf-tile" data-icon="🍿" data-review="Watched with all the lights on, then slept with one eye open. Ten out of ten." data-tag="questionable hour" data-title="Horror At 3AM" type="button">
+<span aria-hidden="true" class="tile-art art-purple">🍿</span>
+<span class="tile-title">Horror At 3AM</span>
+<span class="tile-tag">questionable hour</span>
+</button>
+<button class="shelf-tile" data-icon="📺" data-review="Seventy episodes and almost no plot. I would defend it with my life." data-tag="long commitment" data-title="The Slow Burn" type="button">
+<span aria-hidden="true" class="tile-art art-blue">📺</span>
+<span class="tile-title">The Slow Burn</span>
+<span class="tile-tag">long commitment</span>
+</button>
+<button class="shelf-tile" data-icon="🕵️" data-review="I guessed the villain in minute four. Nobody believes me and I am furious." data-tag="obviously" data-title="The Detective One" type="button">
+<span aria-hidden="true" class="tile-art art-lime">🕵️</span>
+<span class="tile-title">The Detective One</span>
+<span class="tile-tag">obviously</span>
+</button>
+<button class="shelf-tile" data-icon="🌊" data-review="I said I would not cry. I cried during the opening credits." data-tag="do not mention" data-title="The One That Made Me Cry" type="button">
+<span aria-hidden="true" class="tile-art art-yellow">🌊</span>
+<span class="tile-title">The One That Made Me Cry</span>
+<span class="tile-tag">do not mention</span>
+</button>
+<button class="shelf-tile" data-icon="🎞️" data-review="I have never actually seen it. Please do not tell anyone." data-tag="overrated?" data-title="The One Everyone Quotes" type="button">
+<span aria-hidden="true" class="tile-art art-blue">🎞️</span>
+<span class="tile-title">The One Everyone Quotes</span>
+<span class="tile-tag">overrated?</span>
+</button>
+</div>
+</div>
+<div class="shelf-row" data-dir="1" data-speed="0.36">
+<div class="shelf-label"><span>BOOKS</span><span class="shelf-hint">↔ drag me, gently</span></div>
+<div class="shelf-track" role="list">
+<button class="shelf-tile" data-icon="📖" data-review="Chapter one. Four separate times. It is a lifestyle, not a failure." data-tag="aspirational" data-title="The Unfinished Classic" type="button">
+<span aria-hidden="true" class="tile-art art-lime">📖</span>
+<span class="tile-title">The Unfinished Classic</span>
+<span class="tile-tag">aspirational</span>
+</button>
+<button class="shelf-tile" data-icon="🕯️" data-review="I read until 4 AM and then blamed the book out loud in an empty room." data-tag="one more chapter" data-title="The Midnight Read" type="button">
+<span aria-hidden="true" class="tile-art art-purple">🕯️</span>
+<span class="tile-title">The Midnight Read</span>
+<span class="tile-tag">one more chapter</span>
+</button>
+<button class="shelf-tile" data-icon="🔖" data-review="My margin notes are longer than the actual chapters." data-tag="aggressive annotating" data-title="The One Full Of Notes" type="button">
+<span aria-hidden="true" class="tile-art art-yellow">🔖</span>
+<span class="tile-title">The One Full Of Notes</span>
+<span class="tile-tag">aggressive annotating</span>
+</button>
+<button class="shelf-tile" data-icon="🧙" data-review="I live in this book now. The rent is reasonable." data-tag="third reread" data-title="The Escapist One" type="button">
+<span aria-hidden="true" class="tile-art art-pink">🧙</span>
+<span class="tile-title">The Escapist One</span>
+<span class="tile-tag">third reread</span>
+</button>
+<button class="shelf-tile" data-icon="📚" data-review="Highlighting everything means nothing is highlighted." data-tag="criminology things" data-title="The Big Scary Textbook" type="button">
+<span aria-hidden="true" class="tile-art art-blue">📚</span>
+<span class="tile-title">The Big Scary Textbook</span>
+<span class="tile-tag">criminology things</span>
+</button>
+<button class="shelf-tile" data-icon="🗝️" data-review="Whose book is this? It is mine now." data-tag="borrowed" data-title="The Mystery Shelf" type="button">
+<span aria-hidden="true" class="tile-art art-lime">🗝️</span>
+<span class="tile-title">The Mystery Shelf</span>
+<span class="tile-tag">borrowed</span>
+</button>
+</div>
+</div>
+<div class="shelf-row" data-dir="-1" data-speed="0.4">
+<div class="shelf-label"><span>MANGA &amp; ANIME</span><span class="shelf-hint">↔ scroll through my questionable taste</span></div>
+<div class="shelf-track" role="list">
+<button class="shelf-tile" data-icon="🍥" data-review="I started it in school. My grandchildren will know how it ends." data-tag="life choices" data-title="The 900-Chapter One" type="button">
+<span aria-hidden="true" class="tile-art art-blue">🍥</span>
+<span class="tile-title">The 900-Chapter One</span>
+<span class="tile-tag">life choices</span>
+</button>
+<button class="shelf-tile" data-icon="⚔️" data-review="No further questions. The panel spreads alone justify my existence." data-tag="peak fiction" data-title="The Tournament Arc" type="button">
+<span aria-hidden="true" class="tile-art art-yellow">⚔️</span>
+<span class="tile-title">The Tournament Arc</span>
+<span class="tile-tag">peak fiction</span>
+</button>
+<button class="shelf-tile" data-icon="👁️" data-review="I turned every page with one hand over my eyes. Academic." data-tag="no sleep" data-title="The One With Creepy Panels" type="button">
+<span aria-hidden="true" class="tile-art art-purple">👁️</span>
+<span class="tile-title">The One With Creepy Panels</span>
+<span class="tile-tag">no sleep</span>
+</button>
+<button class="shelf-tile" data-icon="🍜" data-review="I read one chapter and immediately ate three meals." data-tag="hungry" data-title="The Food One" type="button">
+<span aria-hidden="true" class="tile-art art-pink">🍜</span>
+<span class="tile-title">The Food One</span>
+<span class="tile-tag">hungry</span>
+</button>
+<button class="shelf-tile" data-icon="🌸" data-review="It has pictures AND words. That is basically studying." data-tag="academic" data-title="The One I Call Research" type="button">
+<span aria-hidden="true" class="tile-art art-lime">🌸</span>
+<span class="tile-title">The One I Call Research</span>
+<span class="tile-tag">academic</span>
+</button>
+<button class="shelf-tile" data-icon="🐙" data-review="I understood none of it and thought about it for six days." data-tag="what" data-title="The Eldritch One" type="button">
+<span aria-hidden="true" class="tile-art art-blue">🐙</span>
+<span class="tile-title">The Eldritch One</span>
+<span class="tile-tag">what</span>
+</button>
+<button class="shelf-tile" data-icon="🎴" data-review="Nothing happens for twelve episodes. I would die for these characters." data-tag="healing" data-title="The Slice-Of-Life" type="button">
+<span aria-hidden="true" class="tile-art art-pink">🎴</span>
+<span class="tile-title">The Slice-Of-Life</span>
+<span class="tile-tag">healing</span>
+</button><button class="shelf-tile" data-icon="🤖" data-review="My neighbours now know the entire transformation sequence by heart." data-tag="volume warning" data-title="The Loud One" type="button">
+<span aria-hidden="true" class="tile-art art-blue">🤖</span>
+<span class="tile-title">The Loud One</span>
+<span class="tile-tag">volume warning</span>
+</button><button class="shelf-tile" data-icon="🎸" data-review="I have never skipped the opening. This is the only thing I have never skipped." data-tag="on repeat" data-title="The One With The OP" type="button">
+<span aria-hidden="true" class="tile-art art-yellow">🎸</span>
+<span class="tile-title">The One With The OP</span>
+<span class="tile-tag">on repeat</span>
+</button><button class="shelf-tile" data-icon="🌙" data-review="Watched it twice. Read an explanation. Still confused. Five stars." data-tag="rewatch required" data-title="The Confusing One" type="button">
+<span aria-hidden="true" class="tile-art art-purple">🌙</span>
+<span class="tile-title">The Confusing One</span>
+<span class="tile-tag">rewatch required</span>
+</button><button class="shelf-tile" data-icon="🐈" data-review="The cat appears for twelve seconds per episode. Best character." data-tag="certified" data-title="The One With The Cat" type="button">
+<span aria-hidden="true" class="tile-art art-lime">🐈</span>
+<span class="tile-title">The One With The Cat</span>
+<span class="tile-tag">certified</span>
+</button><button class="shelf-tile" data-icon="⭐" data-review="Waiting seven days between episodes is a personal attack." data-tag="weekly pain" data-title="The Seasonal One" type="button">
+<span aria-hidden="true" class="tile-art art-pink">⭐</span>
+<span class="tile-title">The Seasonal One</span>
+<span class="tile-tag">weekly pain</span>
+</button></div>
+</div>
 
-  <div class="site-shell" id="top">
-    <header class="site-header">
-      <a class="brand" href="#top" aria-label="403 degrees of Apon, back to top">
-        <span class="brand-badge" aria-hidden="true">403</span>
-        <span class="brand-name">degrees of <b>Apon</b><i>.</i></span>
-      </a>
-      <div class="header-note"><span class="live-dot"></span> A PERSONAL WEBSITE, NOT A PERSONALITY TEST</div>
-      <button class="menu-button" id="menuButton" type="button" aria-expanded="false" aria-controls="siteNav" aria-label="Toggle navigation"><span></span><span></span></button>
-      <nav class="site-nav" id="siteNav" aria-label="Main navigation">
-        <a href="#little-world">the little world</a>
-        <a href="#oddities">oddities</a>
-        <a href="#message">leave a note</a>
-        <button class="marker-toggle" id="markerToggle" type="button" aria-pressed="false" title="Turn highlight mode on or off"><span aria-hidden="true">✎</span> marker mode <i id="markerState">off</i></button>
-      </nav>
-    </header>
-
-    <main id="main">
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-copy">
-          <div class="eyebrow"><span class="eyebrow-square"></span> INTERNET CORNER NO. 403 <span class="eyebrow-dash">—</span> HANDLE WITH CURIOSITY</div>
-          <h1 id="hero-title"><span class="title-line">403</span><span class="title-line title-second"><span class="marker marker-yellow" data-highlight>degrees</span> of</span><span class="title-line title-last"><span class="marker marker-pink" data-highlight>Apon</span><span class="title-period">.</span></span></h1>
-          <p class="hero-intro">A little corner of the internet for strange thoughts, curious people, and decisions that seemed better at the time. <span class="micro-doodle" aria-hidden="true">↘</span></p>
-          <div class="hero-actions">
-            <a class="pill-button pill-dark" href="#oddities">Wander around <span aria-hidden="true">↗</span></a>
-            <button class="pill-button pill-outline" id="aboutButton" type="button">Who made this? <span aria-hidden="true">☺</span></button>
-          </div>
-          <div class="hero-footline"><span class="footline-symbol">✳</span> FIRST-YEAR DU CRIMINOLOGY STUDENT <span class="footline-divider">/</span> PART-TIME MENACE</div>
-        </div>
-
-        <div class="hero-art" aria-label="An illustrated 403 degree warning sign surrounded by found objects">
-          <div class="art-topline"><span>APON'S CONTROL PANEL</span><span>FIG. 403.01 <span class="tiny-status">●</span></span></div>
-          <div class="poster-stage" id="posterStage">
-            <div class="poster-grid" aria-hidden="true"></div>
-            <span class="floating-sticker sticker-round" aria-hidden="true">NOT<br>LOST<br>JUST<br>WANDERING</span>
-            <button class="tiny-object object-star" type="button" data-toy="star" aria-label="Click the floating star">✳</button>
-            <button class="tiny-object object-question" id="secretObject" type="button" aria-label="Question mark: inspect it">?</button>
-            <span class="tiny-object object-sparkle" aria-hidden="true">✦</span>
-            <span class="poster-number" aria-hidden="true">403</span>
-            <div class="poster-caption"><span class="caption-face">☺</span><div><b>STATUS: MOSTLY FINE</b><small>Confidence level: suspicious</small></div></div>
-            <span class="tape tape-one" aria-hidden="true"></span>
-            <span class="tape tape-two" aria-hidden="true"></span>
-            <span class="scribble-arrow" aria-hidden="true">↙</span>
-          </div>
-          <div class="art-bottomline"><span>THINGS ARE SCATTERED ON PURPOSE</span><span>↘ SCROLL A LITTLE</span></div>
-          <span class="margin-note margin-note-right" aria-hidden="true">you found me<br>congrats i guess</span>
-        </div>
-        <span class="loose-label loose-label-two" aria-hidden="true">made with 3% planning ↗</span>
-      </section>
-
-      <div class="ticker" aria-label="Site motto"><div class="ticker-track" aria-hidden="true"><span>CURIOUS PEOPLE ONLY</span><b>✳</b><span>NO REFUNDS ON WEIRDNESS</span><b>☺</b><span>THIS WAY IS THE WRONG WAY</span><b>✳</b><span>CURIOUS PEOPLE ONLY</span><b>✳</b><span>NO REFUNDS ON WEIRDNESS</span><b>☺</b><span>THIS WAY IS THE WRONG WAY</span><b>✳</b></div></div>
-
-      <section class="intro-section section-grid" id="little-world">
-        <div class="section-kicker"><span>01 / THE LITTLE WORLD</span><span class="kicker-line"></span></div>
-        <div class="intro-content">
-          <p class="overline">OH, YOU ACTUALLY CAME IN.</p>
-          <h2>You could be doing something <span class="marker marker-lime" data-highlight>useful.</span></h2>
-          <div class="intro-bottom">
-            <p>But you're here now. Take a look around, poke a few things, and find out why I should probably not be trusted with a website.</p>
-            <p class="small-note">403 degree is more than "এক প্যাচ" ✌️</p>
-          </div>
-          <p class="hidden-whisper" tabindex="0">I see, you're either very observant or have absolutely nothing to do.</p>
-        </div>
-        <div class="intro-doodle">
-          <div class="doodle-stamp" aria-hidden="true"><span>APPROVED BY</span><b>NO ONE</b><span>NO. 403 / MAYBE</span></div>
-          <span class="doodle-star" aria-hidden="true">✳</span>
-          <span class="doodle-caption">A perfectly<br>unnecessary doodle.</span>
-          <span class="doodle-face" aria-hidden="true">:P</span>
-        </div>
-      </section>
-
-      <section class="manifesto" aria-label="A few facts about this website">
-        <div class="manifesto-label">A VERY SHORT DISCLAIMER</div>
-        <p>This website contains <span class="marker marker-yellow" data-highlight>unnecessary objects</span>, <span class="marker marker-pink" data-highlight>questionable confidence</span>, and an unreasonable amount of affection for a good <span class="marker marker-blue" data-highlight>click.</span> Nothing here is that serious.<br><span class="manifesto-aside">(Except the margins. I measured those)</span></p>
-        <span class="manifesto-hand" aria-hidden="true">(mostly)</span>
-      </section>
-
-      <section class="oddities-section" id="oddities">
-        <div class="section-heading">
-          <div><p class="overline">02 / THE THINGS I LEFT LYING AROUND</p><h2>Little <span class="marker marker-pink" data-highlight>oddities.</span></h2></div>
-          <p class="heading-side-note">No big purpose.<br>Just a little bit of mischief. <span aria-hidden="true">↘</span></p>
-          <span class="section-stamp" aria-hidden="true">HANDLE<br>GENTLY</span>
-        </div>
-
-        <div class="oddity-grid">
-          <article class="oddity-card card-lime">
-            <div class="card-index"><span>OBJECT 001</span><span>✳</span></div>
-            <button class="card-art card-eye" id="watchButton" type="button" aria-label="Inspect the suspicious eye"><span class="eye-shape"><i></i></span><span class="eye-caption">I SAW THAT.</span><span class="art-scribble">look away ↗</span></button>
-            <h3>Something's <span class="marker marker-yellow" data-highlight>watching.</span></h3>
-            <p>It's decorative. Probably. It has absolutely no useful information about you.</p>
-            <button class="text-link" data-modal="eye" type="button">Inspect the thing <span>↗</span></button>
-          </article>
-          <article class="oddity-card card-purple">
-            <div class="card-index"><span>OBJECT 002</span><span>↗</span></div>
-            <button class="card-art card-window" id="dontClickButton" type="button" aria-label="Click the button that says do not click"><span class="fake-window"><span class="window-bar"><i></i><i></i><i></i><b>certainly-not-a-trap.exe</b></span><span class="window-body"><b>404?</b><em>nah.</em><small>the button works, though.</small></span></span><span class="window-note">do not click <i>←</i></span></button>
-            <h3>A button I said <span class="marker marker-blue" data-highlight>not to.</span></h3>
-            <p>You read the warning. You clicked anyway. We understand each other now.</p>
-            <button class="text-link" data-modal="button" type="button">I regret nothing <span>↗</span></button>
-          </article>
-          <article class="oddity-card card-pink">
-            <div class="card-index"><span>OBJECT 003</span><span>☺</span></div>
-            <button class="card-art card-smiley" id="smileyButton" type="button" aria-label="Talk to the smiley face"><span class="big-smiley">:)</span><span class="smiley-label">IT KNOWS.</span><span class="smiley-spark">✦</span></button>
-            <h3>I'm acting completely <span class="marker marker-pink" data-highlight>normal.</span></h3>
-            <p>Nothing suspicious here. Please stop asking follow-up questions.</p>
-            <button class="text-link" id="normalButton" type="button">Act normal <span>↗</span></button>
-          </article>
-          <article class="oddity-card card-blue">
-            <div class="card-index"><span>OBJECT 004</span><span>⌁</span></div>
-            <button class="card-art card-scribble" id="scribbleButton" type="button" aria-label="Unravel the strange doodle"><span class="scribble-orbit orbit-a"></span><span class="scribble-orbit orbit-b"></span><span class="scribble-orbit orbit-c"></span><b>?</b><small>EXPLAIN THIS</small></button>
-            <h3>A perfectly good <span class="marker marker-yellow" data-highlight>mystery.</span></h3>
-            <p>I could explain it. But then we'd both lose a perfectly good mystery.</p>
-            <button class="text-link" data-modal="mystery" type="button">Investigate further <span>↗</span></button>
-          </article>
-        </div>
-      </section>
-
-      <section class="highlight-lab" id="highlight-lab">
-        <div class="lab-topline"><span>03 / THE HIGHLIGHT LAB</span><span>VERY IMPORTANT SCIENCE ✳</span></div>
-        <div class="lab-layout">
-          <div class="lab-copy"><p class="overline">MY FAVOURITE LITTLE DETAIL</p><h2>Words are better with a little <span class="marker marker-yellow" data-highlight>drama.</span></h2><p>Turn on marker mode up top. Hover the marked bits. Click them. Select text. The internet is a notebook now, apparently.</p><button id="labToggle" class="pill-button pill-dark" type="button">Try marker mode <span aria-hidden="true">✎</span></button></div>
-          <div class="lab-paper" id="labPaper">
-            <div class="paper-meta"><span>NOTE TO SELF / Nº 403</span><span>DON'T LOSE THIS</span></div>
-            <p>Things I am <span class="marker marker-pink" data-highlight>definitely</span> going to do:</p>
-            <ul><li><span class="marker marker-lime" data-highlight>Be normal for once.</span></li><li>Stop collecting side quests.</li><li><span class="marker marker-blue" data-highlight>Remember why I walked into this room.</span></li><li>Have a snack. This is urgent.</li></ul>
-            <div class="paper-signature">— Apon, allegedly</div>
-            <span class="paper-sticker" aria-hidden="true">TODO<br>(eventually)</span>
-          </div>
-        </div>
-        <span class="lab-margin-note" aria-hidden="true">yes, you can click the highlights ↓</span>
-      </section>
-
-      <section class="sidequests section-grid" id="sidequests">
-        <div class="section-kicker"><span>04 / SIDE QUESTS</span><span class="kicker-line"></span></div>
-        <div class="sidequests-content"><p class="overline">A SMALL COLLECTION OF MAIN CHARACTER DISTRACTIONS</p><h2>Things that live rent-free in my <span class="marker marker-blue" data-highlight>head.</span></h2><div class="sidequest-list">
-          <button type="button" class="sidequest-row" data-quest="people"><span class="quest-num">01</span><span class="quest-name">Meeting people and figuring them out</span><span class="quest-icon">↗</span></button>
-          <button type="button" class="sidequest-row" data-quest="horror"><span class="quest-num">02</span><span class="quest-name">Horror series at a questionable hour</span><span class="quest-icon">↗</span></button>
-          <button type="button" class="sidequest-row" data-quest="snacks"><span class="quest-num">03</span><span class="quest-name">Eating something. Again.</span><span class="quest-icon">↗</span></button>
-          <button type="button" class="sidequest-row" data-quest="chaos"><span class="quest-num">04</span><span class="quest-name">Being childish and slightly sneaky</span><span class="quest-icon">↗</span></button>
-        </div></div>
-        <aside class="sidequest-doodle" aria-label="Small reminder"><span class="doodle-circle">SIDE<br>QUEST<br>ACTIVE</span><span class="doodle-arrow">↶</span><p>you don't have<br>to complete these</p></aside>
-      </section>
-
-      <section class="guestbook-teaser" id="message">
-        <div class="message-deco" aria-hidden="true"><span>✉</span><i>↗</i><b>psst!</b></div>
-        <div class="message-intro"><p class="overline">05 / SEND A LITTLE SOMETHING</p><h2>Leave me a note.<br><span class="marker marker-lime" data-highlight>Be nice-ish.</span></h2><p>Got a thought, a joke, an accusation, or a very important snack recommendation? Send it over.</p><div class="direct-links"><a href="https://www.facebook.com/apon.khan.403" target="_blank" rel="noopener noreferrer">Find me on Facebook <span>↗</span></a><a href="mailto:403_error_4_u@proton.me?subject=A%20note%20from%20403%20degrees">Open email app <span>↗</span></a></div></div>
-        <form class="message-form" id="messageForm" novalidate>
-          <label for="messageName">Your name <span>(or a nickname)</span></label>
-          <input id="messageName" name="name" type="text" maxlength="80" placeholder="Mystery person" autocomplete="name">
-          <label for="messageEmail">Your email <span>(optional)</span></label>
-          <input id="messageEmail" name="email" type="email" maxlength="180" placeholder="you@somewhere.com" autocomplete="email">
-          <label for="messageText">The actual message <span>required</span></label>
-          <textarea id="messageText" name="message" rows="4" minlength="2" maxlength="2000" required placeholder="Type something nice. Or weird. I can handle both."></textarea>
-          <div class="honeypot" aria-hidden="true"><label for="website">Leave this field empty</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
-          <div class="form-bottom"><button class="pill-button pill-dark" id="sendMessage" type="submit">Send it into the void <span aria-hidden="true">↗</span></button><span class="form-note">Private delivery is enabled when the Vercel email service is configured.</span></div>
-          <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
-          <a class="mail-fallback" id="mailFallback" href="mailto:403_error_4_u@proton.me?subject=A%20note%20from%20403%20degrees" hidden>Open an email draft instead ↗</a>
-        </form>
-      </section>
-
-      <section class="final-note" aria-label="One last thing"><span class="final-star" aria-hidden="true">✳</span><p>if you've made it this far, you need a hobby.</p><span class="final-note-small">(i say this with love)</span><button id="finalNudge" type="button" aria-label="One last unnecessary click">click me?</button></section>
-    </main>
-
-    <footer class="site-footer">
-      <button class="footer-403" id="secret403" type="button" aria-label="Tap three times for a secret">403</button>
-      <span class="footer-note">A SMALL EXPERIMENT BY APON KHAN · BUILT WITH TOO MANY CLICKS</span>
-      <a class="footer-brand" href="#top" aria-label="Back to top">403 degrees of Apon<span>.</span></a>
-    </footer>
-  </div>
-
-  <button class="fixed-watcher" id="fixedWatcher" type="button" aria-label="Suspicious floating smiley. Click to talk." aria-describedby="watcherBubble">
-    <span class="watcher-bubble" id="watcherBubble" role="status" aria-live="polite">hi. don't make this weird.</span>
-    <span class="watcher-face" aria-hidden="true"><span class="watcher-eyes"><i></i><i></i></span><span class="watcher-mouth"></span></span>
-    <span class="watcher-caption" id="watcherCaption" aria-hidden="true">HELLO, HUMAN</span>
-  </button>
-
-  <div class="custom-context-menu" id="customContextMenu" role="menu" aria-label="Mysterious object menu" hidden>
-    <div class="context-menu-label">MYSTERIOUS OBJECT / 403</div>
-    <button type="button" role="menuitem" data-context-action="inspect">Inspect this</button>
-    <button type="button" role="menuitem" data-context-action="leave">Leave it alone</button>
-    <button type="button" role="menuitem" data-context-action="close">Close menu ×</button>
-  </div>
-  <div class="toast-region" id="toastRegion" role="status" aria-live="polite" aria-atomic="true"></div>
-
-  <dialog class="modal" id="modal" aria-labelledby="modalTitle">
-    <div class="modal-top"><span class="modal-label">A NOTE FROM APON / FILE Nº 403</span><button class="modal-close" id="modalClose" type="button" aria-label="Close dialog">×</button></div>
-    <div class="modal-content"><span class="modal-icon" id="modalIcon" aria-hidden="true">✳</span><p class="overline" id="modalEyebrow">A LITTLE INTERRUPTION FROM ME</p><h2 id="modalTitle">I'm being silly again.</h2><p id="modalBody">Everything is fine. Almost certainly.</p><button class="pill-button pill-dark" id="modalOkay" type="button">Fair Enough <span>↗</span></button></div>
-  </dialog>
-
-  <div class="theme-overlay" id="themeOverlay" aria-hidden="true"><div class="theme-overlay-noise"></div><div class="theme-overlay-content"><p>APON'S LITTLE RESTRICTED AREA</p><h2>YOU FOUND<br><span>THE WRONG WAY.</span></h2><p class="theme-overlay-message">ACCESS DENIED. REASON: I'M BEING SILLY AGAIN.</p><button class="pill-button pill-dark" id="restoreTheme" type="button">Okay, take me back</button><span class="theme-overlay-code">ERR_403 // THIS IS FINE</span></div></div>
-  <script src="script.js" defer></script>
+</div>
+<div class="shelf-footer-line">
+<p class="hidden-whisper" tabindex="0">the shelf judges you silently. it's seen your watch history.</p>
+<span class="shelf-note">real covers coming eventually · the placeholders are doing their best <span aria-hidden="true">☺</span></span>
+</div>
+<svg aria-hidden="true" class="chess-doodle chess-doodle-rook" viewBox="0 0 66 78" focusable="false">
+  <path d="M14 12h10v7h8v-7h10v7h8v-7h6v16l-5 5 3 25 6 7v4H8v-4l6-7 3-25-5-5z"/>
+  <path d="M14 28h42M17 33h36M18 44h34M17 58h36M11 66h52M22 39l-2 12M43 39l2 12"/>
+  <path d="M21 8v5M36 8v5M51 8v5"/>
+</svg>
+<!-- To use real covers later: replace each <span class="tile-art">…</span> with
+             <img src="assets/shelf/your-cover.jpg" alt="Title"> inside the same button. -->
+</section>
+<section aria-labelledby="interests-title" class="interests-section" id="interests">
+<div class="interests-topline"><span>04 / THE THINGS MY BRAIN COLLECTS</span><span>NO PARTICULAR ORDER ✳</span></div>
+<div class="interests-heading">
+<div><p class="overline">MY LITTLE OBSESSIONS</p><h2 id="interests-title">Things I get <span class="marker marker-pink" data-highlight="">weirdly into.</span></h2><p class="interests-intro">Tap a scribble. Open a tiny window into my current collection of rabbit holes. There may be snacks involved.</p></div>
+<div aria-hidden="true" class="interest-sticker">HOBBIES? <b>MORE LIKE</b> SIDE QUESTS</div>
+</div>
+<div class="interest-grid">
+<button class="interest-note interest-music" data-interest="music" type="button"><span class="interest-index">01 / SOUNDTRACK</span><span aria-hidden="true" class="interest-emoji">♫</span><strong>Music</strong><small>my brain's background tab ↗</small></button>
+<button class="interest-note interest-science" data-interest="science" type="button"><span class="interest-index">02 / WHY THOUGH</span><span aria-hidden="true" class="interest-emoji">⚗</span><strong>Science</strong><small>curiosity with lab goggles ↗</small></button>
+<button class="interest-note interest-computers" data-interest="computers" type="button"><span class="interest-index">03 / BEEP BOOP</span><span aria-hidden="true" class="interest-emoji">⌘</span><strong>Computers</strong><small>turn it off and on? ↗</small></button>
+<button class="interest-note interest-chess" data-interest="chess" type="button"><span class="interest-index">04 / ONE MORE MOVE</span><span aria-hidden="true" class="interest-emoji">♞</span><strong>Chess</strong><small>blunders, but make them strategic ↗</small></button>
+<button class="interest-note interest-sweets" data-interest="sweets" type="button"><span class="interest-index">05 / URGENT MATTER</span><span aria-hidden="true" class="interest-emoji">🍬</span><strong>Sweets</strong><small>this is not a phase ↗</small></button>
+<button class="interest-note interest-photo" data-interest="photography" type="button"><span class="interest-index">06 / FREEZE THAT</span><span aria-hidden="true" class="interest-emoji">▧</span><strong>Photography</strong><small>wait, the light is good ↗</small></button>
+<button class="interest-note interest-books" data-interest="books" type="button"><span class="interest-index">07 / PAPER WORLDS</span><span aria-hidden="true" class="interest-emoji">▤</span><strong>Books</strong><small>just one more chapter ↗</small></button>
+<button class="interest-note interest-tv" data-interest="tv" type="button"><span class="interest-index">08 / NEXT EPISODE</span><span aria-hidden="true" class="interest-emoji">▣</span><strong>TV series</strong><small>sleep is a future problem ↗</small></button>
+<button class="interest-note interest-repair" data-interest="repair" type="button"><span class="interest-index">09 / SECOND CHANCES</span><span aria-hidden="true" class="interest-emoji">⚒</span><strong>Broken &amp; abandoned things</strong><small>repair, reuse, repeat ↗</small></button>
+<button class="interest-note interest-useless" data-interest="useless" type="button"><span class="interest-index">10 / USEFUL? NO.</span><span aria-hidden="true" class="interest-emoji">✳</span><strong>Learning useless things</strong><small>knowledge nobody requested ↗</small></button>
+</div>
+<p class="interests-footnote">I call them interests,, my browser history calls them a cry for help!! <span aria-hidden="true">↗</span></p>
+</section>
+<section class="sidequests section-grid" id="sidequests">
+<div class="section-kicker"><span>05 / SIDE QUESTS</span><span class="kicker-line"></span></div>
+<div class="sidequests-content"><p class="overline">05 / A SMALL COLLECTION OF MAIN CHARACTER DISTRACTIONS</p><h2>Things that live rent-free in my <span class="marker marker-blue" data-highlight="">head.</span></h2><div class="sidequest-list">
+<button class="sidequest-row" data-quest="people" type="button"><span class="quest-num">01</span><span class="quest-name">Meeting people and figuring them out</span><span class="quest-icon">↗</span></button>
+<button class="sidequest-row" data-quest="horror" type="button"><span class="quest-num">02</span><span class="quest-name">Horror series at a questionable hour</span><span class="quest-icon">↗</span></button>
+<button class="sidequest-row" data-quest="snacks" type="button"><span class="quest-num">03</span><span class="quest-name">Eating something. Again.</span><span class="quest-icon">↗</span></button>
+<button class="sidequest-row" data-quest="chaos" type="button"><span class="quest-num">04</span><span class="quest-name">Being childish and slightly sneaky</span><span class="quest-icon">↗</span></button>
+</div></div>
+<aside aria-label="Small reminder" class="sidequest-doodle"><span class="doodle-circle">SIDE<br/>QUEST<br/>ACTIVE</span><span class="doodle-arrow">↶</span><p>you don't have<br/>to complete these</p></aside>
+</section>
+<section class="guestbook-teaser" id="message">
+<div aria-hidden="true" class="message-deco"><span>✉</span><i>↗</i><b>psst!</b></div>
+<div class="message-intro"><p class="overline">06 / SEND A LITTLE SOMETHING</p><h2>Leave me a note.<br/><span class="marker marker-lime" data-highlight="">Be nice-ish.</span></h2><p>Got a thought, a joke, an accusation, or a very important snack recommendation? Send it over.</p><div class="direct-links"><a href="https://www.facebook.com/apon.khan.403" rel="noopener noreferrer" target="_blank">Find me on Facebook <span>↗</span></a><a href="mailto:403_error_4_u@proton.me?subject=A%20note%20from%20403%20degrees">Open email app <span>↗</span></a></div>
+</div>
+<form class="message-form" id="messageForm" novalidate="">
+<label for="messageName">Your name <span>(or a nickname)</span></label>
+<input autocomplete="name" id="messageName" maxlength="80" name="name" placeholder="Mystery person" type="text"/>
+<label for="messageEmail">Your email <span>(optional)</span></label>
+<input autocomplete="email" id="messageEmail" maxlength="180" name="email" placeholder="you@somewhere.com" type="email"/>
+<label for="messageText">The actual message <span>required</span></label>
+<textarea id="messageText" maxlength="2000" minlength="2" name="message" placeholder="Type something nice. Or weird. I can handle both." required="" rows="4"></textarea>
+<div aria-hidden="true" class="honeypot"><label for="website">Leave this field empty</label><input autocomplete="off" id="website" name="website" tabindex="-1" type="text"/></div>
+<div class="form-bottom"><button class="pill-button pill-dark" id="sendMessage" type="submit">Send it into the void <span aria-hidden="true">↗</span></button><span class="form-note">Private delivery is enabled when the Vercel email service is configured.</span></div>
+<p aria-live="polite" class="form-status" id="formStatus" role="status"></p>
+<a class="mail-fallback" hidden="" href="mailto:403_error_4_u@proton.me?subject=A%20note%20from%20403%20degrees" id="mailFallback">Open an email draft instead ↗</a>
+</form>
+</section>
+<section aria-label="One last thing" class="final-note"><span aria-hidden="true" class="final-star">✳</span><p>if you've made it this far,, you need a hobby!!</p><span class="final-note-small">(i say this with love)</span><button aria-label="One last unnecessary click" id="finalNudge" type="button">click me?</button>
+<svg aria-hidden="true" class="chess-doodle chess-doodle-bishop" viewBox="0 0 58 82" focusable="false">
+  <path d="M29 8c-7 0-12 5-12 11 0 5 3 9 7 11l-4 9 8 8 8-8-4-9c5-3 7-7 7-11C39 13 35 8 29 8z"/>
+  <path d="M22 39l-4 11-6 9 4 5h26l4-5-6-9-4-11M20 51h18M16 59h26M13 67h32M10 73h38"/>
+  <path d="M23 14l12 11M34 14L22 25M29 48v10"/>
+</svg>
+</section>
+</main>
+<footer class="site-footer">
+<button aria-label="Tap three times for a secret" class="footer-403" id="secret403" type="button">403</button>
+<span class="footer-note" id="footerStatus">A SMALL EXPERIMENT BY APON KHAN · BUILT WITH TOO MANY CLICKS</span>
+<a aria-label="Back to top" class="footer-brand" href="#top">403 degrees of Apon<span>.</span></a>
+</footer>
+</div>
+<button aria-describedby="watcherBubble" aria-label="Suspicious floating smiley. Click to talk." class="fixed-watcher" id="fixedWatcher" type="button">
+<span aria-live="polite" class="watcher-bubble is-hidden" id="watcherBubble" role="status">hi, don't make this weird,,</span>
+<span aria-hidden="true" class="watcher-face"><span class="watcher-eyes"><i></i><i></i></span><span class="watcher-mouth"></span></span>
+<span aria-hidden="true" class="watcher-caption" id="watcherCaption">HELLO, HUMAN</span>
+</button>
+<div aria-label="Mysterious object menu" class="custom-context-menu" hidden="" id="customContextMenu" role="menu">
+<div class="context-menu-label">MYSTERIOUS OBJECT / 403</div>
+<button data-context-action="inspect" role="menuitem" type="button">Inspect this</button>
+<button data-context-action="leave" role="menuitem" type="button">Leave it alone</button>
+<button data-context-action="close" role="menuitem" type="button">Close menu ×</button>
+</div>
+<div aria-atomic="true" aria-live="polite" class="toast-region" id="toastRegion" role="status"></div>
+<dialog aria-labelledby="modalTitle" class="modal" id="modal">
+<div class="modal-top"><span class="modal-label">A NOTE FROM APON / FILE Nº 403</span><button aria-label="Close dialog" class="modal-close" id="modalClose" type="button">×</button></div>
+<div class="modal-content"><span aria-hidden="true" class="modal-icon" id="modalIcon">✳</span><p class="overline" id="modalEyebrow">A LITTLE INTERRUPTION FROM ME</p><h2 id="modalTitle">I'm being silly again.</h2><p id="modalBody">Everything is fine. Almost certainly.</p><button class="pill-button pill-dark" id="modalOkay" type="button">Fair Enough <span>↗</span></button></div>
+</dialog>
+<div aria-hidden="true" class="theme-overlay" id="themeOverlay"><div class="theme-overlay-noise"></div><div class="theme-overlay-content"><p>APON'S LITTLE RESTRICTED AREA</p><h2>YOU FOUND<br/><span>THE WRONG WAY.</span></h2><p class="theme-overlay-message">ACCESS DENIED. REASON: I'M BEING SILLY AGAIN.</p><button class="pill-button pill-dark" id="restoreTheme" type="button">Okay, take me back</button><span class="theme-overlay-code">ERR_403 // THIS IS FINE</span></div></div>
+<div aria-atomic="true" aria-live="polite" class="ghost-jumpscare" id="ghostJumpscare" role="status" hidden>
+<div aria-hidden="true" class="ghost-jumpscare__sprite">
+<svg class="ghost-jumpscare__drawing" viewBox="0 0 160 180" focusable="false" xmlns="http://www.w3.org/2000/svg">
+<path class="ghost-jumpscare__body" d="M25 145V76C25 42 48 17 80 17s55 25 55 59v69l-15-11-14 11-13-11-13 11-13-11-14 11-13-11-15 11Z"/>
+<path class="ghost-jumpscare__shine" d="M45 61c5-14 16-23 27-26"/>
+<ellipse class="ghost-jumpscare__eye" cx="60" cy="78" rx="6.5" ry="9"/>
+<ellipse class="ghost-jumpscare__eye" cx="101" cy="78" rx="6.5" ry="9"/>
+<circle class="ghost-jumpscare__blush" cx="45" cy="94" r="7"/>
+<circle class="ghost-jumpscare__blush" cx="116" cy="94" r="7"/>
+<path class="ghost-jumpscare__mouth" d="M70 98q10 13 20 0"/>
+<path class="ghost-jumpscare__arm" d="M27 91q-16-8-18 8M133 91q16-8 18 8"/>
+</svg>
+<span class="ghost-jumpscare__burst">BOO!!</span>
+<span class="ghost-jumpscare__spark ghost-jumpscare__spark--one">✦</span>
+<span class="ghost-jumpscare__spark ghost-jumpscare__spark--two">✳</span>
+</div>
+<p class="ghost-jumpscare__caption">BOO!! …did I scare you?? okay good, now go study.</p>
+</div>
+<script defer="" src="script.js"></script>
 </body>
 </html>
