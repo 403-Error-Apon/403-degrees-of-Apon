@@ -420,41 +420,89 @@
     });
   });
 
-  // Tiny ghost attack: only on visits 1, 2, 5, 8, and 12, after the useful section scrolls completely past.
-  const ghostEligibleVisits = new Set([1, 2, 5, 8, 12]);
-  const usefulSection = $("#little-world");
+  // The tiny ghost attacks once per page load, but only after the visitor has passed the useful-thought section.
   const ghostJumpscare = $("#ghostJumpscare");
-  if (ghostEligibleVisits.has(visitNumber) && usefulSection && ghostJumpscare && "IntersectionObserver" in window) {
-    let usefulSectionSeen = false;
+  if (ghostJumpscare) {
     let ghostAttackPlayed = false;
+    let ghostAttackScheduled = false;
     let ghostRetryTimer = 0;
+    let ghostFallbackTimer = 0;
+    let ghostDelayTimer = 0;
+    let usefulSectionPassed = false;
+    let targetSectionSeen = false;
+    let fallbackReady = false;
+    let ghostSectionObserver = null;
 
-    const playGhostAttack = () => {
-      if (ghostAttackPlayed) return;
-      // Don't let a surprise compete with an open dialog or the restricted-area overlay.
+    const usefulSection = $("#little-world");
+    const hasPassedUsefulSection = () => {
+      if (!usefulSection) return true;
+      const sectionBottom = usefulSection.getBoundingClientRect().bottom + window.scrollY;
+      return window.scrollY >= sectionBottom - Math.min(55, usefulSection.offsetHeight * 0.12);
+    };
+    usefulSectionPassed = hasPassedUsefulSection();
+
+    // A random target is selected only from sections following the "You could be doing something useful" section.
+    const targetSections = usefulSection
+      ? $$("#main > section").filter(section =>
+          section !== usefulSection &&
+          Boolean(usefulSection.compareDocumentPosition(section) & Node.DOCUMENT_POSITION_FOLLOWING) &&
+          section.matches(".manifesto, #oddities, #shelf, #interests, #sidequests, #message, .final-note")
+        )
+      : $$("#main > section").filter(section => section.matches("#oddities, #shelf, #interests, #sidequests, #message, .final-note"));
+    const targetSection = targetSections.length
+      ? targetSections[Math.floor(Math.random() * targetSections.length)]
+      : null;
+
+    const playGhostAttack = (sectionAnchor = null) => {
+      if (ghostAttackPlayed || !usefulSectionPassed) return;
+      // Never cover a dialog or the restricted-area overlay; try again when the moment is clear.
       if (modal.open || themeOverlay.classList.contains("is-active")) {
         if (!ghostRetryTimer) {
           ghostRetryTimer = window.setTimeout(() => {
             ghostRetryTimer = 0;
-            playGhostAttack();
+            playGhostAttack(sectionAnchor);
           }, 800);
         }
         return;
       }
 
       ghostAttackPlayed = true;
+      ghostAttackScheduled = false;
+      if (ghostFallbackTimer) window.clearTimeout(ghostFallbackTimer);
+      // Prefer a random visible point within the randomly selected section; fallback to a viewport spot.
+      const isSmallScreen = window.matchMedia("(max-width: 520px)").matches;
+      let x = isSmallScreen ? 44 + Math.random() * 12 : 29 + Math.random() * 42;
+      let y = 34 + Math.random() * 15;
+      if (sectionAnchor) {
+        const rect = sectionAnchor.getBoundingClientRect();
+        const visibleTop = Math.max(0, rect.top);
+        const visibleBottom = Math.min(window.innerHeight, rect.bottom);
+        const visibleLeft = Math.max(0, rect.left);
+        const visibleRight = Math.min(window.innerWidth, rect.right);
+        if (visibleBottom - visibleTop > 60 && visibleRight - visibleLeft > 80) {
+          const pointX = visibleLeft + (visibleRight - visibleLeft) * (0.32 + Math.random() * 0.36);
+          const pointY = visibleTop + (visibleBottom - visibleTop) * (0.34 + Math.random() * 0.32);
+          x = isSmallScreen ? 44 + Math.random() * 12 : Math.min(70, Math.max(30, pointX / window.innerWidth * 100));
+          y = Math.min(56, Math.max(30, pointY / window.innerHeight * 100));
+        }
+      }
+      ghostJumpscare.style.setProperty("--ghost-x", `${x.toFixed(1)}%`);
+      ghostJumpscare.style.setProperty("--ghost-y", `${y.toFixed(1)}%`);
       ghostJumpscare.hidden = false;
       ghostJumpscare.classList.remove("is-active");
-      // Force a reflow so the animation can replay cleanly on this page load.
       void ghostJumpscare.offsetWidth;
       ghostJumpscare.classList.add("is-active");
 
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       if (!reducedMotion) {
-        document.body.classList.remove("ghost-shaking");
-        void document.body.offsetWidth;
-        document.body.classList.add("ghost-shaking");
-        window.setTimeout(() => document.body.classList.remove("ghost-shaking"), 420);
+        window.setTimeout(() => {
+          if (ghostAttackPlayed && !ghostJumpscare.hidden) {
+            document.body.classList.remove("ghost-shaking");
+            void document.body.offsetWidth;
+            document.body.classList.add("ghost-shaking");
+            window.setTimeout(() => document.body.classList.remove("ghost-shaking"), 420);
+          }
+        }, 650);
       }
 
       window.setTimeout(() => {
@@ -464,18 +512,53 @@
       }, reducedMotion ? 1050 : 3500);
     };
 
-    const usefulSectionObserver = new IntersectionObserver(entries => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) {
-          usefulSectionSeen = true;
-        } else if (usefulSectionSeen && entry.boundingClientRect.bottom <= 0) {
-          usefulSectionObserver.disconnect();
-          playGhostAttack();
-          break;
-        }
+    const scheduleGhostAttack = (sectionAnchor = null) => {
+      if (ghostAttackPlayed || ghostAttackScheduled || !usefulSectionPassed) return;
+      ghostAttackScheduled = true;
+      if (ghostFallbackTimer) window.clearTimeout(ghostFallbackTimer);
+      // Let the visitor get past the useful section before the surprise lands.
+      ghostDelayTimer = window.setTimeout(() => {
+        ghostAttackScheduled = false;
+        playGhostAttack(sectionAnchor);
+      }, 450 + Math.random() * 1650);
+    };
+
+    const handleUsefulSectionPass = () => {
+      if (!usefulSectionPassed && hasPassedUsefulSection()) {
+        usefulSectionPassed = true;
+        if (fallbackReady) scheduleGhostAttack();
+        else if (targetSectionSeen) scheduleGhostAttack(targetSection);
       }
-    }, { threshold: 0 });
-    usefulSectionObserver.observe(usefulSection);
+    };
+    window.addEventListener("scroll", handleUsefulSectionPass, { passive: true });
+    window.addEventListener("resize", handleUsefulSectionPass, { passive: true });
+
+    if (targetSection && "IntersectionObserver" in window) {
+      ghostSectionObserver = new IntersectionObserver(entries => {
+        if (entries.some(entry => entry.isIntersecting)) {
+          targetSectionSeen = true;
+          ghostSectionObserver.disconnect();
+          if (usefulSectionPassed) scheduleGhostAttack(targetSection);
+        }
+      }, { threshold: 0.18 });
+      ghostSectionObserver.observe(targetSection);
+    }
+
+    // Eight seconds longer than before. If the visitor has not passed the useful section yet,
+    // the fallback waits until they do rather than firing early.
+    ghostFallbackTimer = window.setTimeout(() => {
+      fallbackReady = true;
+      if (!ghostAttackScheduled && !ghostAttackPlayed && usefulSectionPassed) scheduleGhostAttack();
+    }, 14500 + Math.random() * 2500);
+
+    window.addEventListener("pagehide", () => {
+      window.clearTimeout(ghostRetryTimer);
+      window.clearTimeout(ghostFallbackTimer);
+      window.clearTimeout(ghostDelayTimer);
+      if (ghostSectionObserver) ghostSectionObserver.disconnect();
+      window.removeEventListener("scroll", handleUsefulSectionPass);
+      window.removeEventListener("resize", handleUsefulSectionPass);
+    }, { once: true });
   }
 
   // Scroll progress hairline up top.
