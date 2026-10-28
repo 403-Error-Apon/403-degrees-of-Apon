@@ -1075,3 +1075,31 @@
     raf = requestAnimationFrame(animate);
   })();
 })();
+
+/* ===== Added from upgrade.js ===== */
+/* ============================================================
+   403 UPGRADE PACK (lite) — sparkle trail only
+   ============================================================ */
+(() => {
+  "use strict";
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const PALETTE = ["#1e211b", "#d0e982", "#ffb5cf", "#ffdf58", "#a9c9ff", "#d0baff"];
+  const GLYPHS = ["✦", "✳", "✧", "•", "·"];
+  const pick = arr => arr[(Math.random() * arr.length) | 0];
+
+  let lastSpark = 0;
+  addEventListener("pointermove", e => {
+    if (reduceMotion || e.pointerType === "touch") return;
+    const now = performance.now();
+    if (now - lastSpark < 75) return;
+    lastSpark = now;
+    const s = document.createElement("span");
+    s.className = "spark";
+    s.textContent = pick(GLYPHS);
+    s.style.left = e.clientX + "px";
+    s.style.top = e.clientY + "px";
+    s.style.color = pick(PALETTE);
+    document.body.append(s);
+    setTimeout(() => s.remove(), 900);
+  }, { passive: true });
+})();
