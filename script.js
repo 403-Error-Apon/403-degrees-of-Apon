@@ -744,13 +744,13 @@
       return base + seed * spread;
     };
     const isMobile = () => width < 650;
-    const maxParticles = () => width < 480 ? 48 : width < 760 ? 64 : width < 1200 ? 88 : 108;
-    const spawnInterval = () => isMobile() ? 430 : 300;
+    const maxParticles = () => width < 480 ? 60 : width < 760 ? 78 : width < 1200 ? 112 : 136;
+    const spawnInterval = () => isMobile() ? 390 : 270;
     // Let the graph reach a little farther toward the center, but keep both halves separate.
     const bandWidth = () => width * (width < 650 ? 0.30 : width < 1100 ? 0.27 : 0.245);
 
     function variedRadius() {
-      // A genuine range of sizes rather than mostly tiny points plus a few giant ones.
+      // Restore the original expressive range of dot sizes so the network reads at a glance.
       const roll = Math.random();
       if (roll < 0.17) return random(1.1, 2.0);
       if (roll < 0.37) return random(2.0, 3.2);
@@ -758,7 +758,7 @@
       if (roll < 0.77) return random(4.9, 7.1);
       if (roll < 0.91) return random(7.1, 9.8);
       if (roll < 0.975) return random(9.8, 12.2);
-      return random(12.2, 14); // 28 px maximum diameter.
+      return random(12.2, 14);
     }
 
     function resize() {
@@ -782,7 +782,7 @@
 
     function spawnParticle(now) {
       if (particles.length >= maxParticles()) return;
-      const side = Math.random() < 0.5 ? -1 : 1;
+      const side = isMobile() ? 1 : (Math.random() < 0.5 ? -1 : 1);
       const band = bandWidth();
       // Squared distance puts more arrivals at the wall, with a natural long tail inward.
       const distance = Math.pow(Math.random(), 1.72) * band;
@@ -814,8 +814,8 @@
       const now = performance.now();
       const band = bandWidth();
       const wave = { born: now, x, y, ink, nodes: [] };
-      const perSide = isMobile() ? 6 : 8;
-      for (const side of [-1, 1]) {
+      const perSide = isMobile() ? 5 : 7;
+      for (const side of (isMobile() ? [1] : [-1, 1])) {
         for (let i = 0; i < perSide; i++) {
           // Clusters reach the walls, but do so in a slow, graceful outward glide.
           const distance = Math.pow(Math.random(), 1.78) * band;
@@ -853,7 +853,7 @@
         x: p.sx + (p.tx - p.sx) * progress + driftX,
         y: p.sy + (p.ty - p.sy) * progress + driftY,
         radius,
-        alpha: alpha * innerFade * p.sizeOpacity * p.alpha * breathe,
+        alpha: alpha * innerFade * Math.min(1, p.sizeOpacity * 1.3) * Math.min(1, p.alpha * 1.2) * breathe,
         side: p.side, wallLink: p.wallLink, phase: p.phase, id: p.id,
         wallDistance: p.wallDistance
       };
@@ -887,7 +887,7 @@
             const edgeFade = Math.min(a.alpha, neighbor.point.alpha);
             ctx.strokeStyle = ink;
             ctx.lineWidth = edgeWidth(a.id, neighbor.point.id, 1.55, 0.72) + closeness * 0.16;
-            ctx.globalAlpha = edgeFade * (0.12 + closeness * 0.23);
+            ctx.globalAlpha = edgeFade * (0.28 + closeness * 0.34);
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
             ctx.lineTo(neighbor.point.x, neighbor.point.y);
@@ -904,7 +904,7 @@
         if (distance > band * 0.76) continue;
         ctx.strokeStyle = ink;
         ctx.lineWidth = 1.3 + (Math.abs(Math.sin(p.id * 14.217) * 43758.5453) % 1) * 0.8;
-        ctx.globalAlpha = p.alpha * 0.16 * (1 - distance / band);
+        ctx.globalAlpha = p.alpha * 0.24 * (1 - distance / band);
         ctx.beginPath();
         ctx.moveTo(p.side < 0 ? 0 : width, p.y - Math.sin(p.phase) * 6);
         ctx.lineTo(p.x, p.y);
@@ -915,18 +915,18 @@
       for (const item of visible) {
         const p = item.point;
         if (p.alpha < 0.01) continue;
-        if (p.radius > 7.5) {
-          const glow = ctx.createRadialGradient(p.x, p.y, p.radius * 0.12, p.x, p.y, p.radius * 2.35);
+        if (p.radius > 3.0) {
+          const glow = ctx.createRadialGradient(p.x, p.y, p.radius * 0.12, p.x, p.y, p.radius * 1.8);
           glow.addColorStop(0, "rgba(30,33,27,0.24)");
           glow.addColorStop(1, "rgba(30,33,27,0)");
           ctx.fillStyle = glow;
-          ctx.globalAlpha = p.alpha * 0.48;
+          ctx.globalAlpha = p.alpha * 0.28;
           ctx.beginPath();
-          ctx.arc(p.x, p.y, p.radius * 2.35, 0, Math.PI * 2);
+          ctx.arc(p.x, p.y, p.radius * 1.8, 0, Math.PI * 2);
           ctx.fill();
         }
         ctx.fillStyle = ink;
-        ctx.globalAlpha = p.alpha * (p.radius > 7.5 ? 0.66 : 0.96);
+        ctx.globalAlpha = p.alpha * 0.96;
         ctx.beginPath();
         ctx.arc(p.x, p.y, Math.max(0.65, p.radius), 0, Math.PI * 2);
         ctx.fill();
@@ -960,13 +960,13 @@
             const a = sidePoints[i];
             const nearest = sidePoints.slice(i + 1)
               .map(b => ({ b, d: Math.hypot(b.x - a.x, b.y - a.y) }))
-              .filter(pair => pair.d < 130)
+              .filter(pair => pair.d < 105)
               .sort((u, v) => u.d - v.d)
               .slice(0, 2);
             nearest.forEach(({ b, d }) => {
               ctx.strokeStyle = ink;
-              ctx.lineWidth = edgeWidth(sidePoints[i].id, b.id, 1.55, 0.72);
-              ctx.globalAlpha = Math.min(a.alpha, b.alpha) * (0.12 + (1 - d / 130) * 0.2);
+              ctx.lineWidth = 0.75;
+              ctx.globalAlpha = Math.min(a.alpha, b.alpha) * (0.18 + (1 - d / 105) * 0.22);
               ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
             });
           }
@@ -974,7 +974,7 @@
         points.forEach(p => {
           if (p.alpha <= 0.012) return;
           ctx.fillStyle = ink;
-          ctx.globalAlpha = p.alpha * (p.radius > 7.5 ? 0.64 : 0.95);
+          ctx.globalAlpha = p.alpha * 0.96;
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
           ctx.fill();

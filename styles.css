@@ -337,15 +337,15 @@ body {
   display: block;
   width: 100%;
   height: 100%;
-  opacity: 1;
+  opacity: .98;
   pointer-events: none;
   contain: strict;
 }
 @media (max-width: 760px) {
-  .knowledge-web-canvas { opacity: .97; }
+  .knowledge-web-canvas { opacity: .98; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .knowledge-web-canvas { opacity: .85; }
+  .knowledge-web-canvas { opacity: .9; }
 }
 
 
@@ -663,4 +663,159 @@ body.ghost-shaking .site-shell { animation: ghost-page-jolt .34s ease-out both; 
    margins/offsets stay exactly as they were, and mobile retains the previous size. */
 @media (min-width: 761px) {
   .final-note button { font-size: .99rem; }
+}
+
+/* Scattered-interest wallpaper: keep the doodles, remove the skeleton completely. */
+.interests-section::before{
+  opacity:.22;
+  background-image:
+    url("assets/interests-doodles.svg"),
+    radial-gradient(#c5b8a5 .7px,transparent .7px);
+  background-size:420px 360px,13px 13px;
+  background-position:12px 28px,0 0;
+  background-repeat:repeat,repeat;
+  mask-image:linear-gradient(180deg,#000 0%,#000 65%,transparent 100%);
+}
+
+/* The friendly sign-off is always highlighted; marker mode remains optional elsewhere. */
+.message-intro h2 .marker::before{
+  height:.98em;
+  transform:rotate(-1.3deg) scaleX(1);
+  opacity:1;
+}
+.message-intro h2 .marker:hover::before,
+.message-intro h2 .marker.is-marked::before,
+.highlight-mode .message-intro h2 .marker::before{
+  height:.98em;
+  transform:rotate(-1.3deg) scaleX(1);
+  opacity:1;
+}
+@media(prefers-reduced-motion:reduce){}
+
+
+/* “Be nice-ish.” stays ink-black regardless of marker mode. */
+.message-intro h2 .marker,
+.message-intro h2 .marker:hover,
+.message-intro h2 .marker.is-marked,
+.highlight-mode .message-intro h2 .marker{color:var(--ink)!important;}
+
+/* Desktop text stays selectable; disable accidental selection on touch/mobile only. */
+body, body * { -webkit-user-select: text; user-select: text; }
+@media (max-width: 760px) {
+  body, body * { -webkit-user-select: none; user-select: none; }
+  input, textarea, select, [contenteditable="true"], [contenteditable=""], .allow-text-selection {
+    -webkit-user-select: text; user-select: text;
+  }
+}
+
+
+/* Mobile section refinements; retain the original hero top spacing. */
+@media (max-width: 760px) {
+  .oddities-section { padding-top: 3rem; }
+  .interests-section { padding-top: 2.8rem; }
+  .guestbook-teaser { padding-top: 2.8rem; }
+}
+
+/* v5 mobile tuning: restore the section's top breathing room, but remove the
+   gap between the mail doodle and the section-06 label. Enlarge the hero title
+   on mobile only; desktop typography is untouched. */
+@media (max-width: 760px) {
+  .guestbook-teaser { padding-top: 4.5rem; }
+  .guestbook-teaser > .message-deco { margin-bottom: 0; }
+  .hero h1 { font-size: clamp(4.6rem, 18vw, 7.6rem); }
+}
+@media (max-width: 400px) {
+  .hero h1 { font-size: 4.5rem; }
+}
+
+
+/* Soft, text-sized wash behind the interests intro; edges fade into the doodles. */
+.interests-heading > div:first-child {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+}
+.interests-heading > div:first-child::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -.2rem -1rem;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(238,232,219,.96) 0%, rgba(238,232,219,.88) 58%, rgba(238,232,219,0) 100%);
+}
+
+/* Section 04: reduce the oversized desktop gap above its heading. */
+@media (min-width: 761px) {
+  .interests-section { padding-top: clamp(3rem, 5vw, 4.5rem); }
+}
+
+
+/* v8 refinements: tighter desktop hero, smaller/sharper text wash, and less dead space. */
+.interests-heading > div:first-child::before {
+  inset: -.08rem -.35rem;
+  background: radial-gradient(ellipse at center, rgba(238,232,219,.97) 0%, rgba(238,232,219,.94) 72%, rgba(238,232,219,0) 100%);
+}
+@media (min-width: 761px) {
+  /* Remove roughly two lines of unused space above the eyebrow on desktop only. */
+  .hero { padding-top: clamp(2.5rem, 5.2vw, 5rem); }
+  /* Tighten the lower edge of the first intro section without moving its content. */
+  #little-world.section-grid { padding-bottom: clamp(2.5rem, 5vw, 4.8rem); }
+  .intro-doodle { min-height: 210px; }
+  /* Bring the disclaimer closer to the preceding section. */
+  .manifesto { padding-top: clamp(2.8rem, 5.2vw, 5rem); }
+}
+@media (max-width: 760px) {
+  /* Mobile hero spacing was already right; preserve the original 4.5rem top pad. */
+  .hero { padding-top: 4.5rem; }
+  /* Reduce the unused space below the intro/doodle area on mobile too. */
+  #little-world.section-grid { padding-bottom: 2.8rem; }
+  .manifesto { padding-top: 3.8rem; }
+}
+
+
+/* v9: restore the tighter mobile hero start from v6; lift section 02 on desktop only. */
+@media (max-width: 760px) {
+  /* Add one line of breathing room above the mobile hero eyebrow. */
+  .hero { padding-top: 2.2rem; }
+  /* Keep the divider below the section label, with one line of space after it. */
+  .section-heading > div:first-child { flex: 1; min-width: 0; }
+  .section-heading .overline {
+    display: block;
+    width: 100%;
+    padding-bottom: .75rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #c9c0b1;
+  }
+  .section-heading .overline::after { content: none; }
+}
+@media (min-width: 761px) {
+  .oddities-section { padding-top: clamp(2rem, 4vw, 4rem); }
+  .section-heading > div:first-child { flex: 1; min-width: 0; }
+  /* The divider sits underneath the label, with two lines of space after it. */
+  .section-heading .overline {
+    display: block;
+    width: 100%;
+    padding-bottom: .8rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #c9c0b1;
+  }
+  .section-heading .overline::after { content: none; }
+}
+
+
+/* v11: make the gap below the Section 02 divider unmistakable. */
+@media (max-width: 760px) {
+  .section-heading .overline { margin-bottom: 0; }
+  .section-heading h2 { margin-top: 1.5rem; }
+}
+@media (min-width: 761px) {
+  .section-heading .overline { margin-bottom: 0; }
+  .section-heading h2 { margin-top: 2.75rem; }
+}
+
+/* v15 refinements: keep the motto ribbon level and shelf placeholders straight on mobile. */
+.ticker{transform:rotate(0deg) scale(1.01)}
+@media (max-width:760px){
+  .shelf-tile{transform:rotate(0deg)}
+  .shelf-tile:hover,.shelf-tile:focus-visible{transform:translateY(-8px) scale(1.02)}
 }
