@@ -819,3 +819,7 @@ body, body * { -webkit-user-select: text; user-select: text; }
   .shelf-tile{transform:rotate(0deg)}
   .shelf-tile:hover,.shelf-tile:focus-visible{transform:translateY(-8px) scale(1.02)}
 }
+
+
+/* Remove the divider under the Shelf section label only. */
+.shelf-section .section-heading .overline { border-bottom: 0; padding-bottom: 0; }
