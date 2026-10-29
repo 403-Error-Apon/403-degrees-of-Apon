@@ -471,6 +471,9 @@
     });
   });
 
+  
+
+  
   // The tiny ghost attacks once per page load, but only after the visitor has passed the useful-thought section.
   const ghostJumpscare = $("#ghostJumpscare");
   if (ghostJumpscare) {
@@ -947,6 +950,17 @@
         }
       }
 
+      document.addEventListener("keydown", (event) => {
+      const key = event.key.toLowerCase();
+
+      if (
+        event.key === "F12" ||
+        (event.ctrlKey && event.shiftKey &&
+          ["i", "j", "c"].includes(key))
+        ) {
+        event.preventDefault();
+        }
+      });
       // Random, delicate tethers visually fasten part of each network to the wall itself.
       for (const item of visible) {
         const p = item.point;
