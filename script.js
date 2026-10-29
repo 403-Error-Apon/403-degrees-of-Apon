@@ -976,6 +976,11 @@
         ctx.stroke();
       }
 
+      // Discourage casual inspection via the right-click menu
+      document.addEventListener("contextmenu", (event) => {
+        event.preventDefault();
+      });
+
       // The whole size range uses a single ink; large points bloom softly and fade more.
       for (const item of visible) {
         const p = item.point;
