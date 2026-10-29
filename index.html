@@ -19,8 +19,58 @@
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 <div aria-hidden="true" class="paper-grain"></div>
+<div aria-hidden="true" class="mystic-environment" id="mysticEnvironment">
+<div class="mystic-sky-glow"></div>
+<div class="mystic-stars" id="mysticStars"></div>
+<div class="mystic-shooting-stars" id="mysticShootingStars"></div>
+<div class="mystic-distant-ridge"></div>
+<div class="mystic-forest-layer mystic-forest-back"></div>
+<div class="mystic-forest-layer mystic-forest-mid"></div>
+<div class="mystic-forest-layer mystic-forest-front"></div>
+<svg class="mystic-tree-art right-forest" viewBox="0 0 520 760" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+      <defs>
+        <linearGradient id="barkShade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#020a08"/><stop offset=".55" stop-color="#071a13"/><stop offset="1" stop-color="#020907"/></linearGradient>
+        <linearGradient id="leafShade" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#102e20"/><stop offset="1" stop-color="#04110c"/></linearGradient>
+      </defs>
+      <g class="tree-branches" stroke="url(#barkShade)" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <path d="M390 770 C360 655 395 562 364 472 C347 420 363 353 330 294 C309 255 320 218 300 174" stroke-width="27"/>
+        <path d="M370 590 C313 535 273 505 251 451 C231 403 190 385 157 342" stroke-width="15"/>
+        <path d="M358 492 C407 446 439 399 451 337 C460 291 482 265 501 244" stroke-width="15"/>
+        <path d="M334 329 C284 302 257 263 248 218 C243 192 222 168 204 148" stroke-width="12"/>
+        <path d="M394 566 C433 542 456 511 470 473" stroke-width="10"/>
+        <path d="M286 493 C262 468 235 451 209 443" stroke-width="8"/>
+        <path d="M447 365 C421 340 414 311 420 282" stroke-width="8"/>
+        <path d="M305 277 C334 247 354 218 357 184" stroke-width="8"/>
+        <path d="M250 451 C215 429 196 401 188 374" stroke-width="6"/>
+        <path d="M470 473 C493 452 503 426 505 400" stroke-width="6"/>
+        <path d="M204 148 C185 132 169 110 164 87 M300 174 C287 151 286 127 292 106 M501 244 L515 211 M157 342 L129 321 M451 337 L475 313" stroke-width="4"/>
+      </g>
+      <g fill="url(#leafShade)" stroke="#163a29" stroke-opacity=".34" stroke-width="1.5">
+        <path d="M304 188 C271 178 256 153 267 126 C288 132 308 151 304 188Z"/><path d="M269 158 C232 161 211 143 211 116 C239 113 261 130 269 158Z"/>
+        <path d="M339 235 C359 197 391 187 417 203 C405 230 374 244 339 235Z"/><path d="M313 282 C279 271 263 247 274 222 C302 232 317 252 313 282Z"/>
+        <path d="M422 321 C432 283 462 263 490 276 C481 307 453 324 422 321Z"/><path d="M443 367 C467 337 497 331 517 351 C499 376 469 385 443 367Z"/>
+        <path d="M373 456 C390 419 421 406 446 422 C432 450 403 465 373 456Z"/><path d="M333 390 C302 378 289 354 302 331 C327 341 341 364 333 390Z"/>
+        <path d="M267 452 C238 437 228 410 243 389 C267 403 279 427 267 452Z"/><path d="M216 430 C184 429 164 408 169 383 C197 383 217 403 216 430Z"/>
+        <path d="M459 497 C484 472 512 470 528 490 C507 512 481 517 459 497Z"/><path d="M400 541 C423 510 452 502 472 521 C453 547 426 557 400 541Z"/>
+      </g>
+      <g fill="#06170f" stroke="#173b29" stroke-width="2" stroke-opacity=".5">
+        <path d="M0 760 Q7 718 37 713 Q49 674 83 695 Q105 658 133 690 Q158 671 180 708 Q206 700 224 733 L245 760Z"/>
+        <path d="M210 760 Q225 718 255 729 Q274 684 308 705 Q335 665 362 699 Q392 676 415 710 Q451 686 474 722 Q500 710 520 742 L520 760Z"/>
+        <path d="M335 760 Q344 729 369 727 Q383 700 405 723 Q426 704 447 733 Q468 716 490 742 L505 760Z"/>
+      </g>
+      <g fill="#8be6ad" opacity=".72"><circle cx="71" cy="704" r="1.8"/><circle cx="112" cy="680" r="1.5"/><circle cx="284" cy="712" r="1.7"/><circle cx="431" cy="698" r="1.6"/><circle cx="477" cy="716" r="1.4"/></g>
+    </svg>
+<canvas class="mystic-fireflies" id="mysticFireflies"></canvas>
+<div class="mystic-meadow"></div>
+<div class="mystic-grass mystic-grass-one"></div>
+<div class="mystic-grass mystic-grass-two"></div>
+<div class="mystic-grass mystic-grass-three"></div>
+</div>
+<div aria-hidden="true" class="mystic-cursor-glow" id="mysticCursorGlow"></div>
+
 <div aria-hidden="true" class="scroll-progress" id="scrollProgress"></div>
 <div class="site-shell" id="top">
+<div aria-label="Open the moon's message" class="mystic-moon-wrap" id="mysticMoon" role="button" tabindex="0" title="A perfectly ordinary moon. Probably."><div class="mystic-moon"></div></div>
 <header class="site-header">
 <a aria-label="403 degrees of Apon, back to top" class="brand" href="#top">
 <span aria-hidden="true" class="brand-badge">403</span>
@@ -33,6 +83,7 @@
 <a href="#interests">my little obsessions</a>
 <a href="#message">leave a note</a>
 <button aria-pressed="false" class="marker-toggle" id="markerToggle" title="Turn highlight mode on or off" type="button"><span aria-hidden="true">✎</span> marker mode <i id="markerState">off</i></button>
+<button aria-pressed="false" class="mystic-toggle" id="mysticToggle" type="button" title="Switch to Mystic forest night mode"><span aria-hidden="true" class="mystic-toggle-moon">☾</span><span class="mystic-toggle-label">Mystic</span></button>
 </nav>
 </header>
 <main id="main">

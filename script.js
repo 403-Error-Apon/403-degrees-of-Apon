@@ -106,6 +106,57 @@
   }
   $("#aboutButton").addEventListener("click", showAbout);
 
+  // The Mystic moon has one tiny message for curious visitors.
+  const mysticMoon = $("#mysticMoon");
+  if (mysticMoon) {
+    const openMoonMessage = () => openModal({
+      eyebrow: "A MESSAGE FROM THE MOON",
+      title: "A tiny secret",
+      body: "You know... The sky is blue.\nBut you don't know the meaning it holds... to me.",
+      icon: "☾",
+      hideOkay: true
+    });
+    mysticMoon.setAttribute("role", "button");
+    mysticMoon.setAttribute("tabindex", "0");
+    mysticMoon.setAttribute("aria-label", "Open the moon's message");
+    mysticMoon.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openMoonMessage();
+      }
+    });
+
+    // The moon sits behind the page, so the browser reports the element beneath
+    // it as the tap target. Track a tap in the moon's circle and open the message
+    // unless the visitor was interacting with a real control or draggable surface.
+    // Do not exclude ordinary text/containers: those were swallowing the moon tap
+    // on mobile because the moon's circle overlaps the hero text at narrow widths.
+    const foregroundMoonExclusions = [
+      "a", "button", "input", "textarea", "select", "summary", "label",
+      "[role='button']", "[role='link']", "[role='menuitem']", "[role='dialog']",
+      "[contenteditable='true']", "[data-highlight]",
+      ".fixed-watcher", ".custom-context-menu", ".tiny-object", ".social-float",
+      ".oddity-card", ".shelf-tile", ".interest-note", ".interest-sticker",
+      ".sidequest-row", ".message-form"
+    ].join(",");
+    const pointIsOnMoon = (x, y) => {
+      const rect = mysticMoon.getBoundingClientRect();
+      if (!rect.width || !rect.height || x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) return false;
+      const dx = (x - (rect.left + rect.width / 2)) / (rect.width / 2);
+      const dy = (y - (rect.top + rect.height / 2)) / (rect.height / 2);
+      return dx * dx + dy * dy <= 1;
+    };
+    // Use click rather than pointerup: mobile browsers synthesize click after pointerup,
+    // and opening a modal during pointerup can make that same tap land on its backdrop
+    // and close the modal immediately.
+    document.addEventListener("click", event => {
+      if (!document.body.classList.contains("mystic-mode") || !pointIsOnMoon(event.clientX, event.clientY)) return;
+      const target = event.target instanceof Element ? event.target : null;
+      if (target && target.closest(foregroundMoonExclusions)) return;
+      openMoonMessage();
+    }, true);
+  }
+
   // Marker mode is deliberately interactive: hover, tap, or select the bits you like.
   function setMarkerMode(active) {
     document.body.classList.toggle("highlight-mode", active);
@@ -278,7 +329,7 @@
     if (!item) return;
     const action = item.dataset.contextAction;
     hideContextMenu();
-    if (action === "inspect") openModal({ eyebrow: "THE THING I HID / OBJECT Nº 403", title: "Why 403 is everywhere??", body: "Because It means 'Access Forbidden' — the server got your request but won't let you in,, haha :) You right-clicked a decorative object. Honestly, I respect that level of curiosity.", icon: "?" });
+    if (action === "inspect") openModal({ eyebrow: "THE THING I HID / OBJECT Nº 403", title: "Why 403 is everywhere??", body: "Because It means 'Access Forbidden' — the server got your request but won't let you in,, hehe :) You right-clicked a decorative object. Honestly, I respect that level of curiosity.", icon: "?" });
     if (action === "leave") showToast("Good call. It was about to ask you something.");
   });
   document.addEventListener("pointerdown", event => {
@@ -1003,7 +1054,7 @@
     let pendingPointer = null;
     let lastPostFiveTap = null;
     const isExcludedTapTarget = target => target instanceof Element && !!target.closest(
-      ".theme-overlay, input, textarea, select, a, button, [role='dialog'], [contenteditable='true']"
+      ".theme-overlay, .mystic-moon-wrap, input, textarea, select, a, button, [role='dialog'], [contenteditable='true']"
     );
 
     document.addEventListener("pointerdown", event => {
@@ -1091,15 +1142,227 @@
   addEventListener("pointermove", e => {
     if (reduceMotion || e.pointerType === "touch") return;
     const now = performance.now();
-    if (now - lastSpark < 75) return;
+    if (now - lastSpark < 75) return; // Original 75ms particle cadence.
     lastSpark = now;
     const s = document.createElement("span");
     s.className = "spark";
     s.textContent = pick(GLYPHS);
+    s.setAttribute("aria-hidden", "true");
     s.style.left = e.clientX + "px";
     s.style.top = e.clientY + "px";
     s.style.color = pick(PALETTE);
     document.body.append(s);
-    setTimeout(() => s.remove(), 900);
+    setTimeout(() => s.remove(), 900); // Original 900ms particle lifetime.
   }, { passive: true });
+})();
+
+/* ============================================================
+   MYSTIC MODE CONTROLLER
+   Formerly mystic-mode.js; kept after the main interaction
+   controller to preserve the original deferred script order.
+   ============================================================ */
+
+/* Mystic mode controller for 403 degrees of Apon.
+   The atmospheric scene mirrors the standalone Mystic background while remaining reversible. */
+(() => {
+  "use strict";
+  const toggle = document.getElementById("mysticToggle");
+  const toggleLabel = toggle?.querySelector(".mystic-toggle-label");
+  const toggleIcon = toggle?.querySelector(".mystic-toggle-moon");
+  const environment = document.getElementById("mysticEnvironment");
+  const starField = document.getElementById("mysticStars");
+  const shootingField = document.getElementById("mysticShootingStars");
+  const fireflyCanvas = document.getElementById("mysticFireflies");
+  const cursorGlow = document.getElementById("mysticCursorGlow");
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (!toggle || !toggleLabel || !toggleIcon || !environment || !starField || !shootingField || !fireflyCanvas) return;
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const storageKey = "aponMysticMode";
+  const ctx = fireflyCanvas.getContext("2d", { alpha: true });
+  const finePointer = window.matchMedia("(pointer:fine)").matches;
+  let active = false;
+  let animationFrame = 0;
+  let cometTimer = 0;
+  let particles = [];
+  let width = 0;
+  let height = 0;
+  let dpr = 1;
+  let cursorPositionKnown = false;
+  let activeComets = 0;
+  let lastCometAt = 0;
+
+  // Same quiet, randomised sky as the original Mystic site: 155 tiny points, mostly above the ridge.
+  function buildStars() {
+    if (starField.childElementCount) return;
+    const fragment = document.createDocumentFragment();
+    for (let i = 0; i < 155; i += 1) {
+      const star = document.createElement("i");
+      star.className = `mystic-star${Math.random() > 0.91 ? " is-large" : ""}`;
+      star.style.left = `${Math.random() * 100}%`;
+      star.style.top = `${Math.random() * 62}%`;
+      star.style.setProperty("--duration", `${2.2 + Math.random() * 5}s`);
+      star.style.setProperty("--delay", `${Math.random() * -7}s`);
+      fragment.appendChild(star);
+    }
+    starField.appendChild(fragment);
+  }
+
+  // Match the standalone scene's size, density, colour variation and lower-sky distribution.
+  function resizeFireflies() {
+    const bounds = environment.getBoundingClientRect();
+    width = Math.max(1, bounds.width || window.innerWidth);
+    height = Math.max(1, bounds.height || window.innerHeight);
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    fireflyCanvas.width = Math.round(width * dpr);
+    fireflyCanvas.height = Math.round(height * dpr);
+    fireflyCanvas.style.width = `${width}px`;
+    fireflyCanvas.style.height = `${height}px`;
+    if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const count = Math.min(85, Math.max(35, Math.floor(width / 10)));
+    particles = Array.from({ length: count }, () => ({
+      x: Math.random() * width,
+      y: height * (0.48 + Math.random() * 0.5),
+      radius: 0.8 + Math.random() * 2.1,
+      phase: Math.random() * Math.PI * 2,
+      speed: 0.15 + Math.random() * 0.55,
+      dx: (Math.random() - 0.5) * 0.22,
+      dy: (Math.random() - 0.5) * 0.16,
+      hue: Math.random() > 0.78 ? 170 : 135
+    }));
+  }
+
+  function paintFireflies(now = 0) {
+    if (!active || !ctx) { animationFrame = 0; return; }
+    ctx.clearRect(0, 0, width, height);
+    for (const p of particles) {
+      if (!reduceMotion.matches) { p.x += p.dx; p.y += p.dy; }
+      if (p.x < -5) p.x = width + 5;
+      if (p.x > width + 5) p.x = -5;
+      if (p.y < height * 0.43) p.y = height * 0.92;
+      if (p.y > height) p.y = height * 0.45;
+      const pulse = reduceMotion.matches ? 0.55 : 0.22 + (Math.sin(now * 0.001 * p.speed + p.phase) + 1) * 0.34;
+      const radius = p.radius * (1 + pulse * 0.4);
+      ctx.beginPath();
+      ctx.fillStyle = `hsla(${p.hue}, 95%, 76%, ${pulse})`;
+      ctx.shadowBlur = 10 * pulse;
+      ctx.shadowColor = `hsla(${p.hue}, 95%, 68%, ${pulse})`;
+      ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.shadowBlur = 0;
+    if (!reduceMotion.matches) animationFrame = window.requestAnimationFrame(paintFireflies);
+    else animationFrame = 0;
+  }
+
+  // Same subtle shooting stars as Mystic: no more than two, with a diagonal right-to-left trail.
+  function addComet() {
+    if (!active || reduceMotion.matches || document.hidden || activeComets >= 2) return;
+    const comet = document.createElement("i");
+    comet.className = "mystic-comet";
+    comet.style.left = `${35 + Math.random() * 60}%`;
+    comet.style.top = `${Math.random() * 42}%`;
+    const duration = 1.25 + Math.random() * 0.45;
+    comet.style.setProperty("--comet-duration", `${duration}s`);
+    if (Math.random() > 0.7) comet.style.transform = "rotate(-40deg) scale(.78)";
+    shootingField.appendChild(comet);
+    activeComets += 1;
+    comet.addEventListener("animationend", () => {
+      comet.remove();
+      activeComets = Math.max(0, activeComets - 1);
+    }, { once: true });
+
+    if (activeComets === 1 && Math.random() < 0.18) {
+      window.setTimeout(() => {
+        if (active && activeComets < 2) addComet();
+      }, 500 + Math.random() * 900);
+    }
+    lastCometAt = Date.now();
+  }
+
+  function scheduleComet() {
+    window.clearTimeout(cometTimer);
+    if (!active || reduceMotion.matches || document.hidden) return;
+    const wait = lastCometAt ? 4300 + Math.random() * 4800 : 1400 + Math.random() * 1800;
+    cometTimer = window.setTimeout(() => {
+      addComet();
+      scheduleComet();
+    }, wait);
+  }
+
+  function startEnvironment() {
+    buildStars();
+    resizeFireflies();
+    if (!reduceMotion.matches && !animationFrame) animationFrame = window.requestAnimationFrame(paintFireflies);
+    else if (reduceMotion.matches) paintFireflies(0);
+    scheduleComet();
+  }
+
+  function stopEnvironment() {
+    window.clearTimeout(cometTimer);
+    if (animationFrame) window.cancelAnimationFrame(animationFrame);
+    animationFrame = 0;
+    shootingField.replaceChildren();
+    activeComets = 0;
+    if (ctx) ctx.clearRect(0, 0, width, height);
+  }
+
+  function setMysticMode(enabled) {
+    active = Boolean(enabled);
+    document.body.classList.toggle("mystic-mode", active);
+    if (cursorGlow) cursorGlow.classList.toggle("is-visible", active && cursorPositionKnown && finePointer);
+    toggle.setAttribute("aria-pressed", String(active));
+    toggleLabel.textContent = active ? "Crust" : "Mystic";
+    toggleIcon.textContent = active ? "☼" : "☾";
+    toggle.title = active ? "Switch back to Crust" : "Switch to Mystic forest night mode";
+    toggle.setAttribute("aria-label", active ? "Switch to Crust" : "Switch to Mystic mode");
+    if (metaTheme) metaTheme.setAttribute("content", active ? "#06130f" : "#f4f1e9");
+    environment.setAttribute("aria-hidden", "true");
+    if (active) startEnvironment(); else stopEnvironment();
+    try { window.localStorage.setItem(storageKey, active ? "on" : "off"); } catch (_) { /* Theme still works in private mode. */ }
+  }
+
+  toggle.addEventListener("click", () => setMysticMode(!active));
+
+  // Viewport-fixed glow, like the original Mystic cursor light; it is not a firefly particle.
+  if (cursorGlow && finePointer) {
+    window.addEventListener("pointermove", event => {
+      cursorPositionKnown = true;
+      cursorGlow.style.left = `${event.clientX}px`;
+      cursorGlow.style.top = `${event.clientY}px`;
+      if (active) cursorGlow.classList.add("is-visible");
+    }, { passive: true });
+  }
+
+  window.addEventListener("resize", () => { if (active) resizeFireflies(); }, { passive: true });
+  document.addEventListener("visibilitychange", () => {
+    if (!active) return;
+    if (document.hidden) {
+      if (animationFrame) window.cancelAnimationFrame(animationFrame);
+      animationFrame = 0;
+      window.clearTimeout(cometTimer);
+    } else {
+      if (!reduceMotion.matches && !animationFrame) animationFrame = window.requestAnimationFrame(paintFireflies);
+      scheduleComet();
+    }
+  });
+  reduceMotion.addEventListener?.("change", () => {
+    if (!active) return;
+    if (animationFrame) window.cancelAnimationFrame(animationFrame);
+    animationFrame = 0;
+    if (reduceMotion.matches) {
+      window.clearTimeout(cometTimer);
+      paintFireflies(0);
+      shootingField.replaceChildren();
+      activeComets = 0;
+    } else {
+      animationFrame = window.requestAnimationFrame(paintFireflies);
+      scheduleComet();
+    }
+  });
+
+  let saved = false;
+  try { saved = window.localStorage.getItem(storageKey) === "on"; } catch (_) { saved = false; }
+  setMysticMode(saved);
 })();
