@@ -111,8 +111,8 @@
   if (mysticMoon) {
     const openMoonMessage = () => openModal({
       eyebrow: "A MESSAGE FROM THE MOON",
-      title: "A tiny secret",
-      body: "You know... The sky is blue.\nBut you don't know the meaning it holds... to me.",
+      title: "A secret",
+      body: "You know... The sky is blue.\nBut you don't know the meaning it holds",
       icon: "☾",
       hideOkay: true
     });
@@ -158,11 +158,12 @@
   }
 
   // Marker mode is deliberately interactive: hover, tap, or select the bits you like.
-  function setMarkerMode(active) {
+  // Theme changes set its default quietly; manual toggles keep their little toast.
+  function setMarkerMode(active, { silent = false } = {}) {
     document.body.classList.toggle("highlight-mode", active);
     markerToggle.setAttribute("aria-pressed", String(active));
     markerState.textContent = active ? "on" : "off";
-    if (active) {
+    if (active && !silent) {
       showToast("Yes, words are better with a little drama.", 2300);
       // Emphasize just “drama” without injecting HTML into the toast.
       const toast = toastRegion.lastElementChild;
@@ -174,6 +175,9 @@
       }
     }
   }
+  document.addEventListener("apon:themechange", event => {
+    setMarkerMode(Boolean(event.detail?.mystic), { silent: true });
+  });
   markerToggle.addEventListener("click", () => setMarkerMode(markerToggle.getAttribute("aria-pressed") !== "true"));
   const labToggle = $("#labToggle");
   if (labToggle) labToggle.addEventListener("click", () => setMarkerMode(markerToggle.getAttribute("aria-pressed") !== "true"));
@@ -329,7 +333,7 @@
     if (!item) return;
     const action = item.dataset.contextAction;
     hideContextMenu();
-    if (action === "inspect") openModal({ eyebrow: "THE THING I HID / OBJECT Nº 403", title: "Why 403 is everywhere??", body: "Because It means 'Access Forbidden' — the server got your request but won't let you in,, hehe :) You right-clicked a decorative object. Honestly, I respect that level of curiosity.", icon: "?" });
+    if (action === "inspect") openModal({ eyebrow: "THE THING I HID / OBJECT Nº 403", title: "Why 403 is everywhere??", body: "Because It means 'Access Forbidden' — the server got your request but won't let you in,, haha :) You right-clicked a decorative object. Honestly, I respect that level of curiosity.", icon: "?" });
     if (action === "leave") showToast("Good call. It was about to ask you something.");
   });
   document.addEventListener("pointerdown", event => {
@@ -471,9 +475,6 @@
     });
   });
 
-  
-
-  
   // The tiny ghost attacks once per page load, but only after the visitor has passed the useful-thought section.
   const ghostJumpscare = $("#ghostJumpscare");
   if (ghostJumpscare) {
@@ -950,17 +951,6 @@
         }
       }
 
-      document.addEventListener("keydown", (event) => {
-      const key = event.key.toLowerCase();
-
-      if (
-        event.key === "F12" ||
-        (event.ctrlKey && event.shiftKey &&
-          ["i", "j", "c"].includes(key))
-        ) {
-        event.preventDefault();
-        }
-      });
       // Random, delicate tethers visually fasten part of each network to the wall itself.
       for (const item of visible) {
         const p = item.point;
@@ -975,11 +965,6 @@
         ctx.lineTo(p.x, p.y);
         ctx.stroke();
       }
-
-      // Discourage casual inspection via the right-click menu
-      document.addEventListener("contextmenu", (event) => {
-        event.preventDefault();
-      });
 
       // The whole size range uses a single ink; large points bloom softly and fade more.
       for (const item of visible) {
@@ -1330,6 +1315,7 @@
   function setMysticMode(enabled) {
     active = Boolean(enabled);
     document.body.classList.toggle("mystic-mode", active);
+    document.dispatchEvent(new CustomEvent("apon:themechange", { detail: { mystic: active } }));
     if (cursorGlow) cursorGlow.classList.toggle("is-visible", active && cursorPositionKnown && finePointer);
     toggle.setAttribute("aria-pressed", String(active));
     toggleLabel.textContent = active ? "Crust" : "Mystic";
