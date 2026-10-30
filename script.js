@@ -291,7 +291,8 @@
       showWatcherMessage("I said I wasn't looking. I am practising.", 2500);
     }
   });
-  document.addEventListener("pointermove", event => {
+  const watcherFinePointer = window.matchMedia("(pointer:fine)").matches;
+  if (watcherFinePointer) document.addEventListener("pointermove", event => {
     if (watcherIsAvoiding && !fixedWatcher.classList.contains("is-looking-back")) return;
     const rect = fixedWatcher.getBoundingClientRect();
     const dx = Math.max(-3, Math.min(3, (event.clientX - (rect.left + rect.width / 2)) / 45));
@@ -371,19 +372,14 @@
     if (entry) openModal(entry);
   }));
 
-  // The Shelf: three seamless copies. The visible row always has another
-  // identical set waiting beyond the edge, so the wrap never flashes at center.
+  // The Shelf: three seamless copies. Animation is scheduled only while the row is visible.
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   $$(".shelf-row").forEach(row => {
     const track = $(".shelf-track", row);
     if (!track || !track.children.length) return;
 
     const originals = [...track.children];
-    originals.forEach(node => {
-      node.dataset.originalTile = "true";
-    });
-    // Keep two matching copies after the original: at the loop point, the
-    // next identical set is already visible, so there is no empty end.
+    originals.forEach(node => { node.dataset.originalTile = "true"; });
     for (let copy = 0; copy < 2; copy++) {
       originals.forEach(node => {
         const clone = node.cloneNode(true);
@@ -397,50 +393,83 @@
 
     const direction = parseInt(row.dataset.dir || "-1", 10) < 0 ? 1 : -1;
     const speed = Math.max(.15, parseFloat(row.dataset.speed || ".38") || .38) * direction;
-    let offset = 0, velocity = 0, dragging = false, lastX = 0, inView = true;
+    let offset = 0, velocity = 0, dragging = false, lastX = 0;
+    let inView = !("IntersectionObserver" in window);
     let paused = false;
     let cycleWidth = 0;
     let raf = 0;
+    let measureTimer = 0;
 
     function measureCycle() {
       const firstCopyStart = track.children[originals.length];
       cycleWidth = firstCopyStart
         ? Math.max(1, firstCopyStart.offsetLeft - track.children[0].offsetLeft)
         : Math.max(1, track.scrollWidth / 3);
-      // Start in the middle copy, with a complete identical copy on either side.
       offset = cycleWidth + (offset % cycleWidth);
       track.style.transform = `translate3d(${-offset}px,0,0)`;
     }
-    measureCycle();
-    window.addEventListener("resize", measureCycle, { passive: true });
+
+    function canAnimate() {
+      return inView && !document.hidden && !dragging &&
+        (Math.abs(velocity) > 0.02 || (!paused && !reduceMotion));
+    }
+
+    function stopFrame() {
+      if (raf) window.cancelAnimationFrame(raf);
+      raf = 0;
+      track.classList.remove("is-animating");
+    }
+
+    function scheduleFrame() {
+      if (!raf && canAnimate()) {
+        track.classList.add("is-animating");
+        raf = window.requestAnimationFrame(frame);
+      }
+    }
 
     function normalizeOffset() {
       if (cycleWidth <= 1) return;
-      // Wrap at the copy boundary while the following copy is already in view.
       while (offset >= cycleWidth * 2) offset -= cycleWidth;
       while (offset < cycleWidth) offset += cycleWidth;
     }
 
     function frame() {
-      if (!dragging) {
-        if (!paused && !reduceMotion && inView) offset += speed;
-        offset += velocity;
-        velocity *= .93;
-        normalizeOffset();
-        track.style.transform = `translate3d(${-offset}px,0,0)`;
+      raf = 0;
+      if (!canAnimate()) {
+        track.classList.remove("is-animating");
+        return;
       }
-      raf = window.requestAnimationFrame(frame);
+      if (!paused && !reduceMotion) offset += speed;
+      offset += velocity;
+      velocity *= .93;
+      normalizeOffset();
+      track.style.transform = `translate3d(${-offset}px,0,0)`;
+      if (canAnimate()) raf = window.requestAnimationFrame(frame);
+      else track.classList.remove("is-animating");
     }
-    raf = window.requestAnimationFrame(frame);
 
-    row.addEventListener("pointerenter", () => { paused = true; });
-    row.addEventListener("pointerleave", () => { paused = false; });
-    row.addEventListener("focusin", () => { paused = true; });
-    row.addEventListener("focusout", () => { paused = false; });
+    measureCycle();
+    window.addEventListener("resize", () => {
+      window.clearTimeout(measureTimer);
+      measureTimer = window.setTimeout(() => {
+        measureTimer = 0;
+        if (document.hidden) return;
+        measureCycle();
+        scheduleFrame();
+      }, 120);
+    }, { passive: true });
+    row.addEventListener("pointerenter", () => { paused = true; scheduleFrame(); });
+    row.addEventListener("pointerleave", () => { paused = false; scheduleFrame(); });
+    row.addEventListener("focusin", () => { paused = true; scheduleFrame(); });
+    row.addEventListener("focusout", () => { paused = false; scheduleFrame(); });
     row.addEventListener("pointerdown", event => {
       if (event.button !== undefined && event.button !== 0) return;
-      dragging = true; lastX = event.clientX; velocity = 0;
+      dragging = true;
+      lastX = event.clientX;
+      velocity = 0;
       row.dataset.moved = "";
+      stopFrame();
+      track.classList.add("is-animating");
       try { row.setPointerCapture(event.pointerId); } catch (_) {}
     });
     row.addEventListener("pointermove", event => {
@@ -453,12 +482,22 @@
       normalizeOffset();
       track.style.transform = `translate3d(${-offset}px,0,0)`;
     });
-    const endDrag = () => { dragging = false; };
+    const endDrag = () => { dragging = false; scheduleFrame(); };
     row.addEventListener("pointerup", endDrag);
     row.addEventListener("pointercancel", endDrag);
+
     if ("IntersectionObserver" in window) {
-      new IntersectionObserver(entries => { inView = entries.some(e => e.isIntersecting); }, { threshold: 0.02 }).observe(row);
+      const shelfObserver = new IntersectionObserver(entries => {
+        inView = entries.some(entry => entry.isIntersecting);
+        if (inView) scheduleFrame();
+        else { velocity = 0; stopFrame(); }
+      }, { threshold: 0.02 });
+      shelfObserver.observe(row);
     }
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) stopFrame();
+      else scheduleFrame();
+    });
   });
 
   // Shelf tiles open a tiny review file — unless the user was just dragging.
@@ -785,6 +824,19 @@
 
     let width = 0, height = 0, dpr = 1, raf = 0, lastSpawn = 0;
     let nextId = 1, tapCount = 0;
+    let mysticMode = document.body.classList.contains("mystic-mode");
+    // Read the saved theme before starting the matrix; the theme controller dispatches
+    // its change event later in this same deferred script.
+    try { mysticMode = mysticMode || window.localStorage.getItem("aponMysticMode") === "on"; } catch (_) {}
+    const canAnimate = () => !mysticMode && !document.hidden;
+    function stopAnimation() {
+      if (raf) window.cancelAnimationFrame(raf);
+      raf = 0;
+      if (ctx) ctx.clearRect(0, 0, width, height);
+    }
+    function startAnimation() {
+      if (canAnimate() && !raf) raf = window.requestAnimationFrame(animate);
+    }
     const particles = [];
     const bursts = [];
     const ink = "#1e211b"; // Match the graph-paper grid and the page's ink.
@@ -832,7 +884,8 @@
         p.y = clamp(p.y, -10, height + 10);
       });
       if (particles.length > maxParticles()) particles.splice(0, particles.length - maxParticles());
-      draw(performance.now());
+      if (canAnimate()) draw(performance.now());
+      else ctx.clearRect(0, 0, width, height);
     }
 
     function spawnParticle(now) {
@@ -887,7 +940,7 @@
         }
       }
       bursts.push(wave);
-      if (!raf) raf = requestAnimationFrame(animate);
+      startAnimation();
     }
 
     function getPoint(p, now) {
@@ -1042,7 +1095,7 @@
 
     function animate(now) {
       raf = 0;
-      if (document.hidden) return;
+      if (!canAnimate()) return;
       // Slower arrivals create a calmer field; expired dots make room for random new ones.
       if (now - lastSpawn >= spawnInterval() && particles.length < maxParticles()) {
         spawnParticle(now);
@@ -1052,7 +1105,7 @@
         if (now - particles[i].born >= particles[i].life) particles.splice(i, 1);
       }
       draw(now);
-      raf = requestAnimationFrame(animate);
+      if (canAnimate()) raf = requestAnimationFrame(animate);
     }
 
     let pendingPointer = null;
@@ -1062,7 +1115,7 @@
     );
 
     document.addEventListener("pointerdown", event => {
-      if (event.button !== 0 || event.isPrimary === false || !event.isTrusted) return;
+      if (mysticMode || event.button !== 0 || event.isPrimary === false || !event.isTrusted) return;
       if (!(event.target instanceof Element) || isExcludedTapTarget(event.target)) return;
       pendingPointer = {
         id: event.pointerId,
@@ -1085,6 +1138,7 @@
     }, { passive: true });
 
     document.addEventListener("pointerup", event => {
+      if (mysticMode) { pendingPointer = null; return; }
       const press = pendingPointer;
       if (!press || event.pointerId !== press.id) return;
       pendingPointer = null;
@@ -1122,12 +1176,24 @@
     }, { passive: true, capture: true });
     window.addEventListener("resize", resize, { passive: true });
     document.addEventListener("visibilitychange", () => {
-      if (document.hidden) { cancelAnimationFrame(raf); raf = 0; }
-      else if (!raf) raf = requestAnimationFrame(animate);
+      if (document.hidden) stopAnimation();
+      else startAnimation();
     });
-    reducedMotion.addEventListener?.("change", () => { if (!raf && !document.hidden) raf = requestAnimationFrame(animate); });
+    document.addEventListener("apon:themechange", event => {
+      mysticMode = Boolean(event.detail?.mystic);
+      if (mysticMode) {
+        pendingPointer = null;
+        lastPostFiveTap = null;
+        bursts.length = 0;
+        stopAnimation();
+      } else {
+        resize();
+        startAnimation();
+      }
+    });
+    reducedMotion.addEventListener?.("change", () => { if (canAnimate()) startAnimation(); });
     resize();
-    raf = requestAnimationFrame(animate);
+    startAnimation();
   })();
 })();
 
@@ -1138,6 +1204,8 @@
 (() => {
   "use strict";
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const finePointer = matchMedia("(pointer:fine)").matches;
+  if (!finePointer) return;
   const PALETTE = ["#1e211b", "#d0e982", "#ffb5cf", "#ffdf58", "#a9c9ff", "#d0baff"];
   const GLYPHS = ["✦", "✳", "✧", "•", "·"];
   const pick = arr => arr[(Math.random() * arr.length) | 0];
@@ -1195,12 +1263,31 @@
   let cursorPositionKnown = false;
   let activeComets = 0;
   let lastCometAt = 0;
+  const fireflySprites = new Map();
 
-  // Same quiet, randomised sky as the original Mystic site: 155 tiny points, mostly above the ridge.
+  function getFireflySprite(hue) {
+    if (fireflySprites.has(hue)) return fireflySprites.get(hue);
+    const sprite = document.createElement("canvas");
+    sprite.width = sprite.height = 64;
+    const spriteContext = sprite.getContext("2d");
+    const glow = spriteContext.createRadialGradient(32, 32, 0, 32, 32, 32);
+    glow.addColorStop(0, `hsla(${hue}, 95%, 82%, 1)`);
+    glow.addColorStop(.09, `hsla(${hue}, 95%, 78%, .94)`);
+    glow.addColorStop(.24, `hsla(${hue}, 95%, 72%, .42)`);
+    glow.addColorStop(.52, `hsla(${hue}, 95%, 68%, .12)`);
+    glow.addColorStop(1, `hsla(${hue}, 95%, 68%, 0)`);
+    spriteContext.fillStyle = glow;
+    spriteContext.fillRect(0, 0, 64, 64);
+    fireflySprites.set(hue, sprite);
+    return sprite;
+  }
+
+  // Same quiet, randomised sky; the full 155-point field is reserved for desktop.
   function buildStars() {
     if (starField.childElementCount) return;
     const fragment = document.createDocumentFragment();
-    for (let i = 0; i < 155; i += 1) {
+    const starCount = window.innerWidth <= 650 ? 84 : window.innerWidth <= 1000 ? 118 : 155;
+    for (let i = 0; i < starCount; i += 1) {
       const star = document.createElement("i");
       star.className = `mystic-star${Math.random() > 0.91 ? " is-large" : ""}`;
       star.style.left = `${Math.random() * 100}%`;
@@ -1217,14 +1304,19 @@
     const bounds = environment.getBoundingClientRect();
     width = Math.max(1, bounds.width || window.innerWidth);
     height = Math.max(1, bounds.height || window.innerHeight);
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    // Mobile canvas surfaces are deliberately rendered at a lower backing resolution.
+    dpr = Math.min(window.devicePixelRatio || 1, finePointer ? 1.6 : 1.25);
     fireflyCanvas.width = Math.round(width * dpr);
     fireflyCanvas.height = Math.round(height * dpr);
     fireflyCanvas.style.width = `${width}px`;
     fireflyCanvas.style.height = `${height}px`;
     if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    const count = Math.min(85, Math.max(35, Math.floor(width / 10)));
+    const count = width <= 650
+      ? Math.min(32, Math.max(22, Math.floor(width / 14)))
+      : width <= 1000
+        ? Math.min(48, Math.max(36, Math.floor(width / 16)))
+        : Math.min(85, Math.max(55, Math.floor(width / 10)));
     particles = Array.from({ length: count }, () => ({
       x: Math.random() * width,
       y: height * (0.48 + Math.random() * 0.5),
@@ -1238,7 +1330,7 @@
   }
 
   function paintFireflies(now = 0) {
-    if (!active || !ctx) { animationFrame = 0; return; }
+    if (!active || !ctx || document.hidden) { animationFrame = 0; return; }
     ctx.clearRect(0, 0, width, height);
     for (const p of particles) {
       if (!reduceMotion.matches) { p.x += p.dx; p.y += p.dy; }
@@ -1248,21 +1340,20 @@
       if (p.y > height) p.y = height * 0.45;
       const pulse = reduceMotion.matches ? 0.55 : 0.22 + (Math.sin(now * 0.001 * p.speed + p.phase) + 1) * 0.34;
       const radius = p.radius * (1 + pulse * 0.4);
-      ctx.beginPath();
-      ctx.fillStyle = `hsla(${p.hue}, 95%, 76%, ${pulse})`;
-      ctx.shadowBlur = 10 * pulse;
-      ctx.shadowColor = `hsla(${p.hue}, 95%, 68%, ${pulse})`;
-      ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
-      ctx.fill();
+      const sprite = getFireflySprite(p.hue);
+      const spriteSize = (radius + 10) * 2;
+      ctx.globalAlpha = pulse;
+      ctx.drawImage(sprite, p.x - spriteSize / 2, p.y - spriteSize / 2, spriteSize, spriteSize);
     }
-    ctx.shadowBlur = 0;
+    ctx.globalAlpha = 1;
     if (!reduceMotion.matches) animationFrame = window.requestAnimationFrame(paintFireflies);
     else animationFrame = 0;
   }
 
-  // Same subtle shooting stars as Mystic: no more than two, with a diagonal right-to-left trail.
+  // Same subtle shooting-star trail: one comet on coarse pointers, up to two on fine pointers.
   function addComet() {
-    if (!active || reduceMotion.matches || document.hidden || activeComets >= 2) return;
+    const maxComets = finePointer ? 2 : 1;
+    if (!active || reduceMotion.matches || document.hidden || activeComets >= maxComets) return;
     const comet = document.createElement("i");
     comet.className = "mystic-comet";
     comet.style.left = `${35 + Math.random() * 60}%`;
@@ -1279,7 +1370,7 @@
 
     if (activeComets === 1 && Math.random() < 0.18) {
       window.setTimeout(() => {
-        if (active && activeComets < 2) addComet();
+        if (active && !document.hidden && activeComets < (finePointer ? 2 : 1)) addComet();
       }, 500 + Math.random() * 900);
     }
     lastCometAt = Date.now();
@@ -1298,6 +1389,7 @@
   function startEnvironment() {
     buildStars();
     resizeFireflies();
+    if (document.hidden) return;
     if (!reduceMotion.matches && !animationFrame) animationFrame = window.requestAnimationFrame(paintFireflies);
     else if (reduceMotion.matches) paintFireflies(0);
     scheduleComet();
@@ -1305,6 +1397,7 @@
 
   function stopEnvironment() {
     window.clearTimeout(cometTimer);
+    window.clearTimeout(fireflyResizeTimer);
     if (animationFrame) window.cancelAnimationFrame(animationFrame);
     animationFrame = 0;
     shootingField.replaceChildren();
@@ -1340,7 +1433,15 @@
     }, { passive: true });
   }
 
-  window.addEventListener("resize", () => { if (active) resizeFireflies(); }, { passive: true });
+  let fireflyResizeTimer = 0;
+  window.addEventListener("resize", () => {
+    if (!active || document.hidden) return;
+    window.clearTimeout(fireflyResizeTimer);
+    fireflyResizeTimer = window.setTimeout(() => {
+      fireflyResizeTimer = 0;
+      if (active && !document.hidden) resizeFireflies();
+    }, 140);
+  }, { passive: true });
   document.addEventListener("visibilitychange", () => {
     if (!active) return;
     if (document.hidden) {
@@ -1348,7 +1449,9 @@
       animationFrame = 0;
       window.clearTimeout(cometTimer);
     } else {
+      resizeFireflies();
       if (!reduceMotion.matches && !animationFrame) animationFrame = window.requestAnimationFrame(paintFireflies);
+      else if (reduceMotion.matches) paintFireflies(0);
       scheduleComet();
     }
   });

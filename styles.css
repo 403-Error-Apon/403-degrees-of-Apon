@@ -3188,6 +3188,9 @@ body.footer-in-view .fixed-watcher {
   gap: 1.1rem;
   width: max-content;
   padding: 1.2rem 0 1.35rem;
+}
+
+.shelf-track.is-animating {
   will-change: transform;
 }
 
@@ -7590,4 +7593,41 @@ body.mystic-mode .site-header::after {
 
 body.mystic-mode #modalBody {
   white-space: pre-line;
+}
+
+
+/* Performance tuning: keep Mystic's atmosphere, but lighten continuously composited effects on phones. */
+@media (max-width: 650px) and (pointer: coarse) {
+  body.mystic-mode .mystic-star {
+    box-shadow: 0 0 4px rgba(191,255,219,.62);
+  }
+
+  body.mystic-mode .mystic-star.is-large {
+    box-shadow: 0 0 7px 1px rgba(129,255,178,.34);
+  }
+
+  body.mystic-mode .mystic-comet {
+    filter: none;
+  }
+
+  body.mystic-mode .social-float,
+  body.mystic-mode .poster-caption {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  body.mystic-mode .site-nav {
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+  }
+
+  body.mystic-mode .modal::backdrop {
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+  }
+}
+
+/* The inactive Mystic scene is hidden; pause its CSS twinkles as well as its JS animations. */
+body:not(.mystic-mode) .mystic-star {
+  animation-play-state: paused !important;
 }
