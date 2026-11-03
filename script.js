@@ -100,7 +100,7 @@
     siteNav.classList.remove("is-open");
   }));
 
-  const aboutCopy = "DU criminology student. Curious about people. Frequently hungry. Enjoys horror, silly ideas, and clicking things that say 'do not click.' Please investigate responsibly.";
+  const aboutCopy = "DU criminology student. Curious about people. Frequently hungry. Play bad chess. Enjoy horror, silly ideas, and clicking things that say 'do not click.' Please investigate responsibly.";
   function showAbout() {
     openModal({ eyebrow: "A LITTLE ABOUT ME / FILE Nº 403", title: "So, you want to know who I am?", body: aboutCopy, icon: "⌕" });
   }
