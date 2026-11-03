@@ -35,9 +35,9 @@
   const statuses = [
     ["Curiosity detected!!", "Go on, make questionable decisions,,"],
     ["Suspicious activity!!", "You’re clicking things again, aren’t you?"],
-    ["Snack-related thinking.", "My academic responsibility has gone missing."],
-    ["Everything is normal.", "I reviewed this message myself. That means nothing."],
-    ["Side quest detected.", "Reward: a tiny amount of satisfaction."],
+    ["Snack-related thinking.", "Where has my academic responsibility gone?!!"],
+    ["Everything is normal.", "I reviewed this message myself."],
+    ["Side quest detected.", "Reward: a bit of satisfaction."],
     ["Apon.exe is running.", "Stability is not guaranteed."]
   ];
 
@@ -112,7 +112,7 @@
     const openMoonMessage = () => openModal({
       eyebrow: "A MESSAGE FROM THE MOON",
       title: "A secret",
-      body: "You know... The sky is blue.\nBut you don't know the meaning it holds",
+      body: "You know... The sky is blue.\nBut you don't know the meaning it holds... to me",
       icon: "☾",
       hideOkay: true
     });
