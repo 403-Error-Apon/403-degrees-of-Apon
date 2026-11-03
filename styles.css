@@ -7631,3 +7631,17 @@ body.mystic-mode #modalBody {
 body:not(.mystic-mode) .mystic-star {
   animation-play-state: paused !important;
 }
+
+/* Keep the manifesto's "unnecessary objects" text white in Mystic mode.
+   Marker Mode normally switches highlighted text to dark ink; this phrase is
+   an intentional exception. Its marker background and all other markers stay unchanged. */
+body.mystic-mode .manifesto p > .marker.marker-yellow,
+body.mystic-mode .manifesto p > .marker.marker-yellow:hover,
+body.mystic-mode .manifesto p > .marker.marker-yellow:focus-visible,
+body.mystic-mode .manifesto p > .marker.marker-yellow.is-marked,
+body.mystic-mode.highlight-mode .manifesto p > .marker.marker-yellow,
+body.mystic-mode.highlight-mode .manifesto p > .marker.marker-yellow:hover,
+body.mystic-mode.highlight-mode .manifesto p > .marker.marker-yellow:focus-visible,
+body.mystic-mode.highlight-mode .manifesto p > .marker.marker-yellow.is-marked {
+  color: #fff !important;
+}

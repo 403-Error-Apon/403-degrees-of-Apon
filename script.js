@@ -112,7 +112,7 @@
     const openMoonMessage = () => openModal({
       eyebrow: "A MESSAGE FROM THE MOON",
       title: "A secret",
-      body: "You know... The sky is blue.\nBut you don't know the meaning it holds... to me,,",
+      body: "You know... The sky is blue.\nBut you don't know the meaning it holds",
       icon: "☾",
       hideOkay: true
     });
